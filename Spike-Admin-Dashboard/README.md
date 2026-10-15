@@ -33,6 +33,8 @@ tables and review widgets beside a collapsible sidebar.
   | [`ecommerce-shop.html`](example/ecommerce-shop.html) | Product grid with category / price / rating filters, sort, search |
   | [`ecommerce-detail.html`](example/ecommerce-detail.html) | Product detail (`?id=1`–`8`): gallery, colors, quantity, add to cart, reviews |
   | [`ecommerce-checkout.html`](example/ecommerce-checkout.html) | 3-step checkout (Cart, Billing, Payment) with order summary |
+  | [`login.html`](example/login.html) | Sign in: demo account, wrong-password alert, forgot-password view |
+  | [`register.html`](example/register.html) | Create account: password strength checklist, terms; the new name shows in the shell |
 
 - [`shared.js`](example/shared.js) — loaded by every page: color tokens as CSS
   variables, `tailwind.config`, light/dark theme, mobile drawer, cart, and the

@@ -26,6 +26,8 @@ Design-Pattern/
     │   ├── customers.html     # default page: table-based list
     │   ├── profile-edit.html  # default page: edit-profile form
     │   ├── catalog.html       # default page: product catalog grid
+    │   ├── login.html         # default page: sign in (+ forgot password)
+    │   ├── register.html      # default page: create account
     │   ├── <page>.html        # optional extra pages, same shell
     │   └── shared.js          # theme tokens + shell behaviour for the pages
     └── assets/                # screenshots and images used by the docs
@@ -62,7 +64,7 @@ needs them.
   page (dashboard/overview); extra pages (profile, contacts, shop, ...) and
   the shared `.js` files sit next to it. Rules (see
   `Spike-Admin-Dashboard/example/`):
-  - **Default pages** — every design ships these four, so designs can be
+  - **Default pages** — every design ships these six, so designs can be
     compared page for page (see `Apex-Vue-Dashboard/example/`):
     - `index.html` — dashboard overview + component gallery (rules below).
     - `customers.html` — table-based page: status tabs with counts, search,
@@ -76,6 +78,17 @@ needs them.
     - `catalog.html` — product catalog: filter panel (category, price,
       rating, in stock), search, sort, grid/list toggle, removable filter
       chips, pagination, add to cart, empty state.
+    - `login.html` — sign-in card: validation, show/hide password, remember
+      me, wrong-credentials alert, loading state, and a "Forgot password"
+      view with a sent/resend state. Demo account hint; success opens
+      `index.html`.
+    - `register.html` — create-account card: name, email, role, password
+      with strength checklist, confirm, terms checkbox, loading and success
+      states. Saves only the profile (never the password), so the new name
+      shows in the shell.
+    `login.html` and `register.html` are standalone: no sidebar or top bar,
+    but they keep the theme toggle and a link home, and the sidebar of every
+    other page links to them (sign-out goes to `login.html`).
     Use the design's own components and tokens; content and layout can
     follow the reference site where it has an equivalent page. Older designs
     with a matching page under another name (Spike's `ecommerce-shop.html`
@@ -92,7 +105,8 @@ needs them.
     Values not in `design.md` (tints, the dark palette) are marked PROPOSED.
   - Theme toggle: any `[data-theme-toggle]` button. Default follows the OS;
     only an explicit click is saved.
-  - Every page shares the same sidebar + top bar; the sidebar links all pages
+  - Every page except `login.html` / `register.html` shares the same sidebar +
+    top bar; the sidebar links all pages
     and marks the current one with `aria-current="page"`. When adding a page,
     add its link to the sidebar of every page.
   - Mark components: `<!-- Component: <Name> · element/<file>.md -->` plus
@@ -119,7 +133,8 @@ needs them.
    `README.md` to the template above (with a component table grouped by role —
    see `Spike-Admin-Dashboard/README.md`).
 2. Build `example/shared.js` and the default pages (`index.html`,
-   `customers.html`, `profile-edit.html`, `catalog.html`) from `design.md` and
+   `customers.html`, `profile-edit.html`, `catalog.html`, `login.html`,
+   `register.html`) from `design.md` and
    `element/` following the rules above, and check them in a browser.
 3. Add a row for it in the table in the root `README.md`, linking to the folder.
 

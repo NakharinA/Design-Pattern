@@ -32,6 +32,10 @@ data table beside a white, collapsible sidebar.
   page's top bar.
 - [`example/catalog.html`](example/catalog.html) — product catalog with
   filters, sort, grid/list view, wishlist and cart.
+- [`example/login.html`](example/login.html) — sign in with a demo account,
+  wrong-password alert and a forgot-password view.
+- [`example/register.html`](example/register.html) — create account with a
+  password strength checklist; the new name shows in the top bar.
 - [`example/shared.js`](example/shared.js) — theme tokens as CSS variables,
   `tailwind.config`, light/dark toggle (dark palette is proposed) and the
   shell behaviour every page shares (sidebar, popovers, notifications,
