@@ -18,6 +18,10 @@ tables and review widgets beside a collapsible sidebar.
   tokens, plus shared implementation rules.
 - [`element/`](element/) — one spec per component, each with anatomy, visual
   specs, states and an HTML/Tailwind blueprint.
+- [`example.html`](example.html) — the whole dashboard built from those specs
+  in one plain HTML file (Tailwind via CDN), plus a gallery of primitives and
+  states. Open it in a browser. Each component is marked with
+  `data-component="<Name>"` and a comment naming its spec file.
 
 ### Components
 

@@ -1,0 +1,855 @@
+<!doctype html>
+<!--
+  Spike Admin Dashboard — reference example
+
+  Purpose: a single, self-contained page that shows every component in
+  design.md / element/*.md assembled into the dashboard, so a person or an AI
+  can see the design and copy markup from it.
+
+  How to read this file:
+  - Every component is wrapped in a comment `Component: <Name> · element/<file>.md`
+    and carries `data-component="<Name>"`, so it maps 1:1 to its spec.
+  - Colors come from the tokens in design.md, registered in tailwind.config below
+    (primary, secondary, page, surface, ink, muted, line, success, warning,
+    danger, info, soft). The `*-light` / `*-dark` tints are proposed additions
+    for badge backgrounds and readable text — they are not in design.md.
+  - All numbers, names and products are sample data from the reference page.
+  - Charts are hand-drawn inline SVG so the file needs no chart library.
+    In a real app, swap them for the chart library of your choice.
+  - The top part is the dashboard page; the "Component gallery" at the bottom
+    shows primitives and states (variants, loading, empty, error) one by one.
+
+  Styling: Tailwind CSS via the Play CDN — needs internet to load styles.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spike Admin Dashboard — Example</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:   { DEFAULT: '#5D87FF', light: '#ECF2FF', dark: '#4570EA' },
+            secondary: { DEFAULT: '#49BEFF', light: '#E8F7FF' },
+            page:    '#F6F8FC',
+            surface: '#FFFFFF',
+            ink:     '#202938',
+            muted:   '#6B7280',
+            line:    '#E6EAF0',
+            soft:    '#F2F6FA',
+            success: { DEFAULT: '#13DEB9', light: '#E6FFFA', dark: '#0A8F78' },
+            warning: { DEFAULT: '#FFAE1F', light: '#FEF5E5', dark: '#B87500' },
+            danger:  { DEFAULT: '#FA896B', light: '#FDEDE8', dark: '#C9573A' },
+            info:    { DEFAULT: '#539BFF', light: '#EBF3FE', dark: '#2F6FD6' },
+          },
+          borderRadius: { card: '12px', control: '8px' },
+          boxShadow: { card: '0 2px 10px rgb(20 35 60 / 4%)' },
+        },
+      },
+    };
+  </script>
+  <style>
+    .tabular { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="bg-page font-sans text-sm text-ink antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- Component: AppSidebar · element/design-sidebar.md -->
+  <aside id="sidebar" data-component="AppSidebar"
+         class="fixed inset-y-0 left-0 z-40 flex w-[260px] -translate-x-full flex-col border-r border-line bg-surface transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0">
+    <div class="flex h-16 items-center gap-2 px-6">
+      <span class="grid h-8 w-8 place-items-center rounded-control bg-primary text-sm font-bold text-white">S</span>
+      <span class="text-lg font-semibold">Spike</span>
+    </div>
+    <nav aria-label="Main navigation" class="flex-1 overflow-y-auto px-4 pb-6">
+      <p class="px-3 pb-2 pt-4 text-xs font-semibold uppercase tracking-wide text-muted">Home</p>
+      <a href="#" aria-current="page" class="flex h-11 items-center gap-3 rounded-control bg-primary px-3 font-medium text-white">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>
+        Dashboard
+      </a>
+      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        Analytics
+      </a>
+      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-2 9H8L6 3H3M9 20a1 1 0 100-2 1 1 0 000 2zm9 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
+        eCommerce
+      </a>
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">Apps</p>
+      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        Calendar
+      </a>
+      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg>
+        Chats
+        <span class="ml-auto rounded-full bg-secondary-light px-2 py-0.5 text-xs font-medium text-info-dark">3</span>
+      </a>
+      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        Email
+      </a>
+      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0114 0M17 11a3 3 0 100-6M22 21a6 6 0 00-4-5.6"/></svg>
+        Contacts
+      </a>
+    </nav>
+    <div class="m-4 flex items-center gap-3 rounded-card bg-soft p-3">
+      <span class="grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-white">JD</span>
+      <div class="min-w-0">
+        <p class="truncate font-medium">Jonathan Deo</p>
+        <p class="truncate text-xs text-muted">Admin</p>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-backdrop" class="fixed inset-0 z-30 hidden bg-ink/40 lg:hidden"></div>
+
+  <div class="flex min-w-0 flex-1 flex-col">
+
+    <!-- Component: AppTopbar · element/design-topbar.md -->
+    <header data-component="AppTopbar" class="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-surface px-4 md:px-6">
+      <div class="flex items-center gap-3">
+        <!-- Component: IconButton · element/design-icon-button.md -->
+        <button id="sidebar-toggle" type="button" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false" data-component="IconButton"
+                class="grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary lg:hidden">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <h1 class="text-lg font-semibold">Dashboard</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" aria-label="Open notifications (2 unread)" data-component="IconButton"
+                class="relative grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+          <span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"></span>
+        </button>
+        <button type="button" aria-label="Open profile menu" class="grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">JD</button>
+      </div>
+    </header>
+
+    <!-- Component: DashboardPage · element/design-dashboard-page.md -->
+    <main data-component="DashboardPage" class="flex-1 p-4 md:p-6">
+      <div class="grid grid-cols-1 gap-5 xl:grid-cols-12 xl:gap-6">
+
+        <!-- Component: DashboardGreetingCard · element/design-dashboard-greeting-card.md -->
+        <section data-component="DashboardGreetingCard" class="relative overflow-hidden rounded-card border border-line bg-primary-light p-6 shadow-card xl:col-span-5">
+          <div class="relative z-10 max-w-[60%]">
+            <h2 class="text-2xl font-semibold leading-tight">Congratulations, Jonathan</h2>
+            <p class="mt-2 text-muted">You have done <strong class="font-semibold text-primary">38%</strong> more sales this week.</p>
+            <button type="button" class="mt-5 inline-flex h-10 items-center rounded-control bg-primary px-4 font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">View sales</button>
+          </div>
+          <!-- Decorative illustration placeholder: replace with an original or licensed asset -->
+          <svg aria-hidden="true" class="absolute -bottom-4 right-2 hidden h-40 w-40 sm:block" viewBox="0 0 160 160">
+            <circle cx="95" cy="80" r="62" fill="#49BEFF" opacity=".18"/>
+            <rect x="50" y="78" width="18" height="50" rx="4" fill="#5D87FF" opacity=".55"/>
+            <rect x="76" y="58" width="18" height="70" rx="4" fill="#5D87FF" opacity=".75"/>
+            <rect x="102" y="38" width="18" height="90" rx="4" fill="#5D87FF"/>
+          </svg>
+        </section>
+
+        <!-- Component: OrderStatusSummary · element/design-order-status-summary.md -->
+        <section data-component="OrderStatusSummary" aria-label="Orders by status" class="grid grid-cols-2 gap-3 xl:col-span-7 xl:gap-4">
+          <a href="#orders?status=new" class="rounded-card border border-line bg-surface p-4 shadow-card hover:border-info focus:outline-none focus:ring-2 focus:ring-primary">
+            <div class="flex items-center gap-2 text-muted"><span class="h-2.5 w-2.5 rounded-full bg-info"></span>New</div>
+            <p class="tabular mt-2 text-2xl font-semibold">142</p>
+          </a>
+          <a href="#orders?status=processing" class="rounded-card border border-line bg-surface p-4 shadow-card hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <div class="flex items-center gap-2 text-muted"><span class="h-2.5 w-2.5 rounded-full bg-primary"></span>Processing</div>
+            <p class="tabular mt-2 text-2xl font-semibold">86</p>
+          </a>
+          <a href="#orders?status=on-hold" class="rounded-card border border-line bg-surface p-4 shadow-card hover:border-warning focus:outline-none focus:ring-2 focus:ring-primary">
+            <div class="flex items-center gap-2 text-muted"><span class="h-2.5 w-2.5 rounded-full bg-warning"></span>On hold</div>
+            <p class="tabular mt-2 text-2xl font-semibold">17</p>
+          </a>
+          <a href="#orders?status=delivered" class="rounded-card border border-line bg-surface p-4 shadow-card hover:border-success focus:outline-none focus:ring-2 focus:ring-primary">
+            <div class="flex items-center gap-2 text-muted"><span class="h-2.5 w-2.5 rounded-full bg-success"></span>Delivered</div>
+            <p class="tabular mt-2 text-2xl font-semibold">1,204</p>
+          </a>
+        </section>
+
+        <!-- Component: WeeklyOrderUpdatesCard · element/design-weekly-order-updates-card.md -->
+        <section data-component="WeeklyOrderUpdatesCard" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6 xl:col-span-8">
+          <header class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h3 class="text-base font-semibold">Total Orders</h3>
+              <p class="text-muted">Weekly order updates</p>
+            </div>
+            <!-- Component: PeriodSelect · element/design-period-select.md -->
+            <div data-component="PeriodSelect">
+              <label class="sr-only" for="orders-period">Reporting period</label>
+              <select id="orders-period" class="h-10 rounded-control border border-line bg-surface px-3 focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="thisWeek">This Week</option>
+                <option value="lastWeek">Last Week</option>
+              </select>
+            </div>
+          </header>
+          <div class="mt-5">
+            <svg id="orders-chart" class="h-auto w-full" viewBox="0 0 560 220" role="img" aria-labelledby="orders-chart-summary"></svg>
+            <p id="orders-chart-summary" class="sr-only"></p>
+          </div>
+        </section>
+
+        <!-- Component: PaymentsKpiCard · element/design-payments-kpi-card.md -->
+        <article data-component="PaymentsKpiCard" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6 xl:col-span-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold">Payments</h3>
+            <span class="text-xs text-muted">Last 7 days</span>
+          </div>
+          <div class="mt-4 flex items-baseline gap-2">
+            <!-- Component: MetricValue · element/design-metric-value.md -->
+            <strong data-component="MetricValue" class="tabular text-3xl font-semibold tracking-tight">12,389</strong>
+            <!-- Component: TrendIndicator · element/design-trend-indicator.md -->
+            <span data-component="TrendIndicator" class="inline-flex items-center gap-1 text-sm font-medium text-danger-dark" aria-label="Down 3.8 percent compared with previous 7 days">
+              <span aria-hidden="true">↓</span><span aria-hidden="true">−3.8%</span>
+            </span>
+          </div>
+          <div class="mt-5 flex h-2.5 overflow-hidden rounded-full bg-soft" role="img" aria-label="Payment methods: PayPal 52 percent, Credit Card 48 percent">
+            <div class="h-full bg-primary" style="width:52%"></div>
+            <div class="h-full bg-secondary" style="width:48%"></div>
+          </div>
+          <ul class="mt-4 space-y-2">
+            <li class="flex items-center justify-between"><span class="flex items-center gap-2 text-muted"><span class="h-2.5 w-2.5 rounded-full bg-primary"></span>PayPal</span><span class="tabular font-medium">52%</span></li>
+            <li class="flex items-center justify-between"><span class="flex items-center gap-2 text-muted"><span class="h-2.5 w-2.5 rounded-full bg-secondary"></span>Credit Card</span><span class="tabular font-medium">48%</span></li>
+          </ul>
+        </article>
+
+        <!-- Component: ProductsKpiCard · element/design-products-kpi-card.md -->
+        <article data-component="ProductsKpiCard" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6 xl:col-span-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold">Products</h3>
+            <span class="text-xs text-muted">Last 7 days</span>
+          </div>
+          <div class="mt-4 flex items-baseline gap-2">
+            <strong class="tabular text-3xl font-semibold tracking-tight">432</strong>
+            <span class="inline-flex items-center gap-1 text-sm font-medium text-success-dark" aria-label="Up 26.5 percent compared with previous 7 days">
+              <span aria-hidden="true">↑</span><span aria-hidden="true">+26.5%</span>
+            </span>
+          </div>
+          <!-- Optional sparkline -->
+          <svg aria-hidden="true" class="mt-4 h-12 w-full" viewBox="0 0 200 48" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#49BEFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="0,38 28,32 56,36 84,22 112,26 140,14 168,18 200,6"/>
+          </svg>
+        </article>
+
+        <!-- Component: CustomersKpiCard · element/design-customers-kpi-card.md -->
+        <article data-component="CustomersKpiCard" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6 xl:col-span-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold">Customers</h3>
+            <span class="text-xs text-muted">Last 7 days</span>
+          </div>
+          <div class="mt-4 flex items-baseline gap-2">
+            <strong class="tabular text-3xl font-semibold tracking-tight">6,380</strong>
+            <span class="inline-flex items-center gap-1 text-sm font-medium text-success-dark" aria-label="Up 26.5 percent compared with previous 7 days">
+              <span aria-hidden="true">↑</span><span aria-hidden="true">+26.5%</span>
+            </span>
+          </div>
+          <svg aria-hidden="true" class="mt-4 h-12 w-full" viewBox="0 0 200 48" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#5D87FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="0,34 28,30 56,20 84,28 112,16 140,22 168,10 200,12"/>
+          </svg>
+        </article>
+
+        <!-- Component: ProfitInsightCard · element/design-profit-insight-card.md -->
+        <aside data-component="ProfitInsightCard" class="flex flex-col justify-between rounded-card border border-line bg-surface p-5 shadow-card md:p-6 xl:col-span-4">
+          <p class="text-muted">Profit insight</p>
+          <div class="mt-3 flex items-center gap-3">
+            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-success-light text-success-dark" aria-hidden="true">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 16l6-6 4 4 6-7M14 7h6v6"/></svg>
+            </span>
+            <p class="text-lg font-semibold leading-snug"><span class="tabular">$18k</span> profit more than last month</p>
+          </div>
+          <p class="mt-3 text-xs text-muted">Up compared with the previous month (USD)</p>
+        </aside>
+
+        <!-- Component: LatestDealCard · element/design-latest-deal-card.md -->
+        <article data-component="LatestDealCard" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6 xl:col-span-4">
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 class="text-base font-semibold">Latest Deal</h3>
+              <p class="text-xs text-muted">Last 7 days</p>
+            </div>
+            <strong class="tabular text-lg font-semibold">86.5%</strong>
+          </div>
+          <div class="mt-4 h-2.5 rounded-full bg-soft" role="progressbar" aria-label="Latest deal progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="86.5">
+            <div class="h-2.5 rounded-full bg-primary" style="width:86.5%"></div>
+          </div>
+          <!-- The meaning of the two amounts is not verified against the live page; "Achieved / Target" is the spec's proposal -->
+          <div class="mt-3 flex justify-between">
+            <span class="text-muted">Achieved <b class="tabular font-semibold text-ink">$98,500</b></span>
+            <span class="text-muted">Target <b class="tabular font-semibold text-ink">$122,900</b></span>
+          </div>
+
+          <!-- Component: RecentPurchasersAvatars · element/design-recent-purchasers-avatars.md -->
+          <div data-component="RecentPurchasersAvatars" class="mt-6 border-t border-line pt-5">
+            <p class="mb-3 font-medium">Recent Purchasers</p>
+            <!-- Component: AvatarGroup · element/design-avatar-group.md -->
+            <div data-component="AvatarGroup" class="flex items-center -space-x-2">
+              <span class="grid h-9 w-9 place-items-center rounded-full border-2 border-surface bg-primary-light text-xs font-semibold text-primary" title="Maya Chen">MC</span>
+              <span class="grid h-9 w-9 place-items-center rounded-full border-2 border-surface bg-secondary-light text-xs font-semibold text-info-dark" title="Leo Park">LP</span>
+              <span class="grid h-9 w-9 place-items-center rounded-full border-2 border-surface bg-success-light text-xs font-semibold text-success-dark" title="Ana Silva">AS</span>
+              <span class="grid h-9 w-9 place-items-center rounded-full border-2 border-surface bg-warning-light text-xs font-semibold text-warning-dark" title="Tom Reed">TR</span>
+              <span class="grid h-9 w-9 place-items-center rounded-full border-2 border-surface bg-soft text-xs font-semibold text-muted" aria-label="8 more purchasers">+8</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Component: CustomerTrendChart · element/design-customer-trend-chart.md -->
+        <!-- Uses ChartCard (element/design-chart-card.md) as its wrapper -->
+        <section data-component="CustomerTrendChart" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6 xl:col-span-8">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h3 class="text-base font-semibold">Customers</h3>
+              <p class="text-muted">April 07 – April 14</p>
+            </div>
+            <div class="text-right">
+              <strong class="tabular text-2xl font-semibold">6,380</strong>
+              <p class="text-xs text-muted">Last Week: <span class="tabular">4,298</span></p>
+            </div>
+          </div>
+          <ul class="mt-4 flex gap-4 text-xs text-muted" aria-hidden="true">
+            <li class="flex items-center gap-2"><span class="h-0.5 w-4 bg-primary"></span>This week</li>
+            <li class="flex items-center gap-2"><span class="h-0.5 w-4 border-t-2 border-dashed border-secondary"></span>Last week</li>
+          </ul>
+          <div class="mt-3">
+            <svg id="customer-chart" class="h-auto w-full" viewBox="0 0 560 240" role="img" aria-labelledby="customer-chart-summary"></svg>
+            <p id="customer-chart-summary" class="sr-only"></p>
+          </div>
+        </section>
+
+        <!-- Component: RecentProductsTable · element/design-recent-products-table.md -->
+        <!-- Built from DataTable (element/design-table.md) -->
+        <section data-component="RecentProductsTable" class="rounded-card border border-line bg-surface shadow-card xl:col-span-8">
+          <header class="flex items-center justify-between p-5 md:px-6">
+            <h3 class="text-base font-semibold">Recent Products</h3>
+            <!-- Component: Button (ghost) · element/design-button.md -->
+            <button type="button" data-component="Button" class="inline-flex h-9 items-center rounded-control px-3 font-medium text-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary">View all</button>
+          </header>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-left">
+              <thead class="bg-[#F8FAFC] text-xs uppercase tracking-wide text-muted">
+                <tr><th scope="col" class="px-5 py-3 font-semibold md:px-6">Products</th><th scope="col" class="px-5 py-3 font-semibold">Payment</th><th scope="col" class="px-5 py-3 font-semibold md:px-6">Status</th></tr>
+              </thead>
+              <tbody>
+                <tr class="border-t border-line hover:bg-soft">
+                  <td class="px-5 py-3 md:px-6">
+                    <!-- Component: ProductIdentityCell · element/design-product-identity-cell.md -->
+                    <div data-component="ProductIdentityCell" class="flex min-w-48 items-center gap-3">
+                      <span class="grid h-11 w-11 shrink-0 place-items-center rounded-control bg-primary-light text-xs font-semibold text-primary" aria-hidden="true">IP</span>
+                      <div><p class="font-medium">iPhone 13 Pro Max</p><p class="text-xs text-muted">Pacific Blue, 128GB</p></div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3">
+                    <p class="tabular"><b class="font-semibold">$180</b> <span class="text-muted">/ $499</span></p>
+                    <div class="mt-1.5 h-1.5 w-28 rounded-full bg-soft"><div class="h-1.5 rounded-full bg-warning" style="width:36%"></div></div>
+                    <p class="mt-1 text-xs text-muted">Partially paid</p>
+                  </td>
+                  <td class="px-5 py-3 md:px-6"><span class="inline-flex rounded-full bg-success-light px-2.5 py-1 text-xs font-medium text-success-dark">Confirmed</span></td>
+                </tr>
+                <tr class="border-t border-line hover:bg-soft">
+                  <td class="px-5 py-3 md:px-6">
+                    <div class="flex min-w-48 items-center gap-3">
+                      <span class="grid h-11 w-11 shrink-0 place-items-center rounded-control bg-secondary-light text-xs font-semibold text-info-dark" aria-hidden="true">AW</span>
+                      <div><p class="font-medium">Apple Watch Series 7</p><p class="text-xs text-muted">Midnight, 45mm</p></div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3">
+                    <p class="tabular"><b class="font-semibold">$0</b> <span class="text-muted">/ $399</span></p>
+                    <div class="mt-1.5 h-1.5 w-28 rounded-full bg-soft"><div class="h-1.5 rounded-full bg-danger" style="width:2%"></div></div>
+                    <p class="mt-1 text-xs text-muted">Not paid</p>
+                  </td>
+                  <td class="px-5 py-3 md:px-6"><span class="inline-flex rounded-full bg-danger-light px-2.5 py-1 text-xs font-medium text-danger-dark">Cancelled</span></td>
+                </tr>
+                <tr class="border-t border-line hover:bg-soft">
+                  <td class="px-5 py-3 md:px-6">
+                    <div class="flex min-w-48 items-center gap-3">
+                      <span class="grid h-11 w-11 shrink-0 place-items-center rounded-control bg-warning-light text-xs font-semibold text-warning-dark" aria-hidden="true">HP</span>
+                      <div><p class="font-medium">Headphones Pro</p><p class="text-xs text-muted">Sand, wireless</p></div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3">
+                    <p class="tabular"><b class="font-semibold">$249</b> <span class="text-muted">/ $249</span></p>
+                    <div class="mt-1.5 h-1.5 w-28 rounded-full bg-soft"><div class="h-1.5 rounded-full bg-success" style="width:100%"></div></div>
+                    <p class="mt-1 text-xs text-muted">Fully paid</p>
+                  </td>
+                  <td class="px-5 py-3 md:px-6"><span class="inline-flex rounded-full bg-info-light px-2.5 py-1 text-xs font-medium text-info-dark">Shipped</span></td>
+                </tr>
+                <tr class="border-t border-line hover:bg-soft">
+                  <td class="px-5 py-3 md:px-6">
+                    <div class="flex min-w-48 items-center gap-3">
+                      <span class="grid h-11 w-11 shrink-0 place-items-center rounded-control bg-success-light text-xs font-semibold text-success-dark" aria-hidden="true">MB</span>
+                      <div><p class="font-medium">MacBook Air M2</p><p class="text-xs text-muted">Starlight, 256GB</p></div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3">
+                    <p class="tabular"><b class="font-semibold">$600</b> <span class="text-muted">/ $1,199</span></p>
+                    <div class="mt-1.5 h-1.5 w-28 rounded-full bg-soft"><div class="h-1.5 rounded-full bg-warning" style="width:50%"></div></div>
+                    <p class="mt-1 text-xs text-muted">Partially paid</p>
+                  </td>
+                  <td class="px-5 py-3 md:px-6"><span class="inline-flex rounded-full bg-warning-light px-2.5 py-1 text-xs font-medium text-warning-dark">Pending</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Component: VisitorLocationCard · element/design-visitor-location-card.md -->
+        <section data-component="VisitorLocationCard" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6 xl:col-span-4">
+          <h3 class="text-base font-semibold">Visit From USA</h3>
+          <p class="text-xs text-muted">Share of visitors by state</p>
+          <ul class="mt-5 space-y-4">
+            <li>
+              <div class="mb-2 flex justify-between"><span>LA</span><span class="tabular text-muted">28%</span></div>
+              <div class="h-2 rounded-full bg-soft"><div class="h-2 rounded-full bg-primary" style="width:28%"></div></div>
+            </li>
+            <li>
+              <div class="mb-2 flex justify-between"><span>NY</span><span class="tabular text-muted">21%</span></div>
+              <div class="h-2 rounded-full bg-soft"><div class="h-2 rounded-full bg-primary" style="width:21%"></div></div>
+            </li>
+            <li>
+              <div class="mb-2 flex justify-between"><span>KA</span><span class="tabular text-muted">18%</span></div>
+              <div class="h-2 rounded-full bg-soft"><div class="h-2 rounded-full bg-primary" style="width:18%"></div></div>
+            </li>
+            <li>
+              <div class="mb-2 flex justify-between"><span>AZ</span><span class="tabular text-muted">12%</span></div>
+              <div class="h-2 rounded-full bg-soft"><div class="h-2 rounded-full bg-primary" style="width:12%"></div></div>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Component: LatestReviewsSection · element/design-latest-reviews-section.md -->
+        <section data-component="LatestReviewsSection" class="rounded-card border border-line bg-surface shadow-card xl:col-span-12">
+          <header class="flex flex-wrap items-center justify-between gap-3 p-5 md:px-6">
+            <div>
+              <h2 class="text-lg font-semibold">Latest Reviews</h2>
+              <p class="text-muted">Reviews received across all channels</p>
+            </div>
+            <!-- Component: SearchField · element/design-search-field.md -->
+            <label data-component="SearchField" class="relative block w-full sm:w-72">
+              <span class="sr-only">Search reviews</span>
+              <svg aria-hidden="true" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+              <input id="review-search" type="search" placeholder="Search reviews…" class="h-10 w-full rounded-control border border-line bg-surface pl-9 pr-3 placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            </label>
+          </header>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-left">
+              <thead class="bg-[#F8FAFC] text-xs uppercase tracking-wide text-muted">
+                <tr>
+                  <th scope="col" class="px-5 py-3 font-semibold md:px-6">Products</th>
+                  <th scope="col" class="px-5 py-3 font-semibold">Customer</th>
+                  <th scope="col" class="px-5 py-3 font-semibold">Reviews</th>
+                  <th scope="col" class="px-5 py-3 font-semibold">Status</th>
+                  <th scope="col" class="px-5 py-3 font-semibold md:px-6">Time</th>
+                </tr>
+              </thead>
+              <tbody id="review-rows">
+                <tr class="border-t border-line align-top hover:bg-soft">
+                  <td class="px-5 py-4 md:px-6">
+                    <div class="flex min-w-48 items-center gap-3">
+                      <span class="grid h-11 w-11 shrink-0 place-items-center rounded-control bg-primary-light text-xs font-semibold text-primary" aria-hidden="true">IP</span>
+                      <div><p class="font-medium">iPhone 13 Pro Max</p><p class="text-xs text-muted">Pacific Blue, 128GB</p></div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-4">
+                    <!-- Component: CustomerIdentityCell · element/design-customer-identity-cell.md -->
+                    <div data-component="CustomerIdentityCell" class="flex min-w-44 items-center gap-3">
+                      <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-secondary-light text-xs font-semibold text-info-dark" aria-hidden="true">JL</span>
+                      <div class="min-w-0"><p class="truncate font-medium">Jordan Lee</p><p class="truncate text-xs text-muted">jordan@example.test</p></div>
+                    </div>
+                  </td>
+                  <td class="max-w-sm px-5 py-4">
+                    <!-- Component: RatingDisplay · element/design-rating-display.md -->
+                    <div data-component="RatingDisplay" class="inline-flex text-warning" role="img" aria-label="4 out of 5 stars"><span aria-hidden="true">★★★★</span><span aria-hidden="true" class="text-line">★</span></div>
+                    <p class="mt-1 line-clamp-2 text-muted">Great battery life and the camera is excellent in low light. Delivery was fast.</p>
+                  </td>
+                  <td class="px-5 py-4"><span data-component="StatusBadge" class="inline-flex rounded-full bg-success-light px-2.5 py-1 text-xs font-medium text-success-dark">Confirmed</span></td>
+                  <td class="whitespace-nowrap px-5 py-4 text-muted md:px-6">Apr 14, 10:32</td>
+                </tr>
+                <tr class="border-t border-line align-top hover:bg-soft">
+                  <td class="px-5 py-4 md:px-6">
+                    <div class="flex min-w-48 items-center gap-3">
+                      <span class="grid h-11 w-11 shrink-0 place-items-center rounded-control bg-secondary-light text-xs font-semibold text-info-dark" aria-hidden="true">AW</span>
+                      <div><p class="font-medium">Apple Watch Series 7</p><p class="text-xs text-muted">Midnight, 45mm</p></div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-4">
+                    <div class="flex min-w-44 items-center gap-3">
+                      <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-success-light text-xs font-semibold text-success-dark" aria-hidden="true">AS</span>
+                      <div class="min-w-0"><p class="truncate font-medium">Ana Silva</p><p class="truncate text-xs text-muted">ana@example.test</p></div>
+                    </div>
+                  </td>
+                  <td class="max-w-sm px-5 py-4">
+                    <div class="inline-flex text-warning" role="img" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></div>
+                    <p class="mt-1 line-clamp-2 text-muted">Comfortable strap, bright screen. Fitness tracking works better than I expected.</p>
+                  </td>
+                  <td class="px-5 py-4"><span class="inline-flex rounded-full bg-warning-light px-2.5 py-1 text-xs font-medium text-warning-dark">Pending</span></td>
+                  <td class="whitespace-nowrap px-5 py-4 text-muted md:px-6">Apr 13, 18:05</td>
+                </tr>
+                <tr class="border-t border-line align-top hover:bg-soft">
+                  <td class="px-5 py-4 md:px-6">
+                    <div class="flex min-w-48 items-center gap-3">
+                      <span class="grid h-11 w-11 shrink-0 place-items-center rounded-control bg-warning-light text-xs font-semibold text-warning-dark" aria-hidden="true">HP</span>
+                      <div><p class="font-medium">Headphones Pro</p><p class="text-xs text-muted">Sand, wireless</p></div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-4">
+                    <div class="flex min-w-44 items-center gap-3">
+                      <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-warning-light text-xs font-semibold text-warning-dark" aria-hidden="true">TR</span>
+                      <div class="min-w-0"><p class="truncate font-medium">Tom Reed</p><p class="truncate text-xs text-muted">tom@example.test</p></div>
+                    </div>
+                  </td>
+                  <td class="max-w-sm px-5 py-4">
+                    <div class="inline-flex text-warning" role="img" aria-label="2 out of 5 stars"><span aria-hidden="true">★★</span><span aria-hidden="true" class="text-line">★★★</span></div>
+                    <p class="mt-1 line-clamp-2 text-muted">Sound is fine but the ear cushions started peeling after two weeks of use.</p>
+                  </td>
+                  <td class="px-5 py-4"><span class="inline-flex rounded-full bg-danger-light px-2.5 py-1 text-xs font-medium text-danger-dark">Rejected</span></td>
+                  <td class="whitespace-nowrap px-5 py-4 text-muted md:px-6">Apr 12, 09:47</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Shown by the search script when no row matches — EmptyState in context -->
+            <div id="review-empty" class="hidden p-8 text-center">
+              <p class="font-medium">No reviews match your search</p>
+              <p class="mt-1 text-muted">Try a product or customer name.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Component: DashboardWelcomeNotice · element/design-dashboard-welcome-notice.md -->
+        <aside id="welcome-notice" data-component="DashboardWelcomeNotice" class="flex items-start justify-between gap-4 rounded-card border border-primary/20 bg-primary-light p-4 md:p-5 xl:col-span-12">
+          <div>
+            <h3 class="font-semibold">Welcome to Spike Admin</h3>
+            <p class="mt-1 text-muted">Customize this dashboard for your workflow — rearrange cards and pick the metrics that matter to your team.</p>
+          </div>
+          <button id="welcome-dismiss" type="button" aria-label="Dismiss notice" class="grid h-9 w-9 shrink-0 place-items-center rounded-control text-muted hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary">
+            <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </aside>
+
+      </div>
+
+      <!-- ================================================================
+           Component gallery — primitives and states, one by one.
+           Not part of the dashboard layout; here for reference.
+           ================================================================ -->
+      <section aria-labelledby="gallery-title" class="mt-12 border-t border-line pt-8">
+        <h2 id="gallery-title" class="text-xl font-semibold">Component gallery</h2>
+        <p class="mt-1 text-muted">Primitives and states from <code>element/</code>, shown in isolation.</p>
+
+        <div class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-6">
+
+          <!-- Component: Button · element/design-button.md -->
+          <div data-component="Button" class="rounded-card border border-line bg-surface p-5 shadow-card">
+            <h3 class="mb-4 font-semibold">Button</h3>
+            <div class="flex flex-wrap gap-3">
+              <button type="button" class="inline-flex h-10 items-center rounded-control bg-primary px-4 font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">Primary</button>
+              <button type="button" class="inline-flex h-10 items-center rounded-control bg-primary-light px-4 font-medium text-primary hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">Secondary</button>
+              <button type="button" class="inline-flex h-10 items-center rounded-control border border-primary px-4 font-medium text-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">Outline</button>
+              <button type="button" class="inline-flex h-10 items-center rounded-control px-4 font-medium text-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary">Ghost</button>
+              <button type="button" class="inline-flex h-10 items-center rounded-control bg-danger px-4 font-medium text-white hover:bg-danger-dark focus:outline-none focus:ring-2 focus:ring-danger focus:ring-offset-2">Danger</button>
+              <button type="button" disabled class="inline-flex h-10 items-center rounded-control bg-primary px-4 font-medium text-white disabled:cursor-not-allowed disabled:opacity-50">Disabled</button>
+              <button type="button" disabled aria-busy="true" class="inline-flex h-10 items-center gap-2 rounded-control bg-primary px-4 font-medium text-white disabled:opacity-80">
+                <svg aria-hidden="true" class="h-4 w-4 animate-spin motion-reduce:animate-none" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".3" stroke-width="3"/><path d="M21 12a9 9 0 00-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+                Saving…
+              </button>
+            </div>
+          </div>
+
+          <!-- Component: IconButton · element/design-icon-button.md -->
+          <div data-component="IconButton" class="rounded-card border border-line bg-surface p-5 shadow-card">
+            <h3 class="mb-4 font-semibold">IconButton</h3>
+            <div class="flex flex-wrap gap-3">
+              <button type="button" aria-label="Open menu" class="grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+                <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+              </button>
+              <button type="button" aria-label="Open notifications (2 unread)" class="relative grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+                <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+                <span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"></span>
+              </button>
+              <button type="button" aria-label="Close" class="grid h-10 w-10 place-items-center rounded-control bg-primary-light text-primary hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 6l12 12M18 6L6 18"/></svg>
+              </button>
+              <button type="button" aria-label="Settings (disabled)" disabled class="grid h-10 w-10 place-items-center rounded-control text-muted disabled:cursor-not-allowed disabled:opacity-40">
+                <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 00-2-1.2L14 3h-4l-.5 2.6a7 7 0 00-2 1.2l-2.4-1-2 3.4 2 1.6a7 7 0 000 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 002 1.2L10 21h4l.5-2.6a7 7 0 002-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Component: StatusBadge · element/design-status-badge.md -->
+          <div data-component="StatusBadge" class="rounded-card border border-line bg-surface p-5 shadow-card">
+            <h3 class="mb-4 font-semibold">StatusBadge</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex rounded-full bg-success-light px-2.5 py-1 text-xs font-medium text-success-dark">Confirmed</span>
+              <span class="inline-flex rounded-full bg-warning-light px-2.5 py-1 text-xs font-medium text-warning-dark">Pending</span>
+              <span class="inline-flex rounded-full bg-danger-light px-2.5 py-1 text-xs font-medium text-danger-dark">Cancelled</span>
+              <span class="inline-flex rounded-full bg-info-light px-2.5 py-1 text-xs font-medium text-info-dark">Shipped</span>
+              <span class="inline-flex rounded-full bg-soft px-2.5 py-1 text-xs font-medium text-muted">Draft</span>
+            </div>
+          </div>
+
+          <!-- Component: TextInput · element/design-input.md -->
+          <div data-component="TextInput" class="space-y-4 rounded-card border border-line bg-surface p-5 shadow-card">
+            <h3 class="font-semibold">TextInput</h3>
+            <label class="block font-medium">Product name
+              <input type="text" placeholder="e.g. iPhone 13" class="mt-1 block h-10 w-full rounded-control border border-line px-3 font-normal placeholder:text-muted hover:border-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            </label>
+            <div>
+              <label for="sku-invalid" class="block font-medium">SKU</label>
+              <input id="sku-invalid" type="text" value="12" aria-invalid="true" aria-describedby="sku-error" class="mt-1 block h-10 w-full rounded-control border border-danger px-3 focus:outline-none focus:ring-2 focus:ring-danger/30" />
+              <p id="sku-error" class="mt-1 text-xs text-danger-dark">SKU must be at least 6 characters.</p>
+            </div>
+            <label class="block font-medium text-muted">Store (disabled)
+              <input type="text" value="Main store" disabled class="mt-1 block h-10 w-full cursor-not-allowed rounded-control border border-line bg-soft px-3 font-normal" />
+            </label>
+          </div>
+
+          <!-- Component: Select · element/design-select.md -->
+          <div data-component="Select" class="space-y-4 rounded-card border border-line bg-surface p-5 shadow-card">
+            <h3 class="font-semibold">Select</h3>
+            <label class="block font-medium">Period
+              <select class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <option>This Week</option><option>Last 7 days</option><option>This Month</option>
+              </select>
+            </label>
+            <label class="block font-medium text-muted">Region (disabled)
+              <select disabled class="mt-1 block h-10 w-full cursor-not-allowed rounded-control border border-line bg-soft px-3 font-normal"><option>USA</option></select>
+            </label>
+          </div>
+
+          <!-- Component: TrendIndicator + MetricValue · element/design-trend-indicator.md, element/design-metric-value.md -->
+          <div data-component="TrendIndicator" class="rounded-card border border-line bg-surface p-5 shadow-card">
+            <h3 class="mb-4 font-semibold">MetricValue &amp; TrendIndicator</h3>
+            <ul class="space-y-3">
+              <li class="flex items-baseline justify-between">
+                <strong data-component="MetricValue" class="tabular text-3xl font-semibold tracking-tight">$18.2k</strong>
+                <span class="inline-flex items-center gap-1 text-sm font-medium text-success-dark" aria-label="Up 12.4 percent"><span aria-hidden="true">↑ +12.4%</span></span>
+              </li>
+              <li class="flex items-baseline justify-between">
+                <strong class="tabular text-3xl font-semibold tracking-tight">12,389</strong>
+                <span class="inline-flex items-center gap-1 text-sm font-medium text-danger-dark" aria-label="Down 3.8 percent"><span aria-hidden="true">↓ −3.8%</span></span>
+              </li>
+              <li class="flex items-baseline justify-between">
+                <strong class="tabular text-3xl font-semibold tracking-tight">86.5%</strong>
+                <span class="inline-flex items-center gap-1 text-sm font-medium text-muted" aria-label="No change"><span aria-hidden="true">→ 0.0%</span></span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Component: DashboardCard · element/design-dashboard-card.md -->
+          <section data-component="DashboardCard" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6">
+            <header class="mb-4 flex items-center justify-between">
+              <div>
+                <h3 class="font-semibold">DashboardCard</h3>
+                <p class="text-xs text-muted">Optional subtitle</p>
+              </div>
+              <button type="button" aria-label="Card options" class="grid h-9 w-9 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+                <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
+              </button>
+            </header>
+            <div class="grid h-24 place-items-center rounded-control border border-dashed border-line text-muted">Content slot</div>
+            <footer class="mt-4 border-t border-line pt-3 text-xs text-muted">Optional footer</footer>
+          </section>
+
+          <!-- Component: ChartCard · element/design-chart-card.md -->
+          <section data-component="ChartCard" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold">ChartCard</h3>
+              <span class="text-xs text-muted">This week</span>
+            </div>
+            <svg class="mt-4 h-32 w-full" viewBox="0 0 300 120" preserveAspectRatio="none" role="img" aria-label="Example chart: values rise from 30 to 90 over the week">
+              <g stroke="#E6EAF0" stroke-width="1"><line x1="0" y1="30" x2="300" y2="30"/><line x1="0" y1="60" x2="300" y2="60"/><line x1="0" y1="90" x2="300" y2="90"/></g>
+              <polyline fill="none" stroke="#5D87FF" stroke-width="2.5" stroke-linejoin="round" points="0,90 50,80 100,84 150,60 200,52 250,40 300,30"/>
+            </svg>
+          </section>
+
+          <!-- Component: AvatarGroup · element/design-avatar-group.md -->
+          <!-- Component: RatingDisplay · element/design-rating-display.md -->
+          <div data-component="AvatarGroup" class="space-y-5 rounded-card border border-line bg-surface p-5 shadow-card">
+            <div>
+              <h3 class="mb-3 font-semibold">AvatarGroup</h3>
+              <div class="flex items-center -space-x-2">
+                <span class="grid h-9 w-9 place-items-center rounded-full border-2 border-surface bg-primary-light text-xs font-semibold text-primary">MC</span>
+                <span class="grid h-9 w-9 place-items-center rounded-full border-2 border-surface bg-secondary-light text-xs font-semibold text-info-dark">LP</span>
+                <span class="grid h-9 w-9 place-items-center rounded-full border-2 border-surface bg-soft text-xs font-semibold text-muted" aria-label="8 more">+8</span>
+              </div>
+            </div>
+            <div data-component="RatingDisplay">
+              <h3 class="mb-3 font-semibold">RatingDisplay</h3>
+              <div class="flex flex-col gap-1">
+                <span class="text-warning" role="img" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></span>
+                <span class="text-warning" role="img" aria-label="3 out of 5 stars"><span aria-hidden="true">★★★</span><span aria-hidden="true" class="text-line">★★</span></span>
+                <span class="text-warning" role="img" aria-label="0 out of 5 stars"><span aria-hidden="true" class="text-line">★★★★★</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Component: EmptyState · element/design-empty-state.md -->
+          <div data-component="EmptyState" class="rounded-card border border-line bg-surface shadow-card">
+            <div class="grid min-h-48 place-items-center p-6 text-center">
+              <div>
+                <span class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-soft text-muted" aria-hidden="true">
+                  <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4zM3 7v10l9 4 9-4V7"/></svg>
+                </span>
+                <p class="mt-3 text-base font-medium">No data yet</p>
+                <p class="mt-1 text-muted">Try another period or check back later.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Component: LoadingSkeleton · element/design-loading-skeleton.md -->
+          <div data-component="LoadingSkeleton" aria-hidden="true" class="animate-pulse space-y-4 rounded-card border border-line bg-surface p-5 shadow-card motion-reduce:animate-none">
+            <div class="h-4 w-1/3 rounded bg-line"></div>
+            <div class="h-8 w-1/2 rounded bg-line"></div>
+            <div class="h-28 rounded-control bg-soft"></div>
+          </div>
+
+          <!-- Component: ErrorState · element/design-error-state.md -->
+          <div data-component="ErrorState" role="alert" class="rounded-card border border-danger/40 bg-surface p-5 shadow-card">
+            <div class="flex items-start gap-3">
+              <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-danger-light text-danger-dark" aria-hidden="true">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>
+              </span>
+              <div>
+                <h3 class="font-semibold">Couldn’t load this data</h3>
+                <p class="mt-1 text-muted">The server didn’t respond. Please try again.</p>
+                <button type="button" class="mt-3 inline-flex h-9 items-center rounded-control bg-primary px-3 font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">Retry</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Component: DataTable · element/design-table.md -->
+          <div data-component="DataTable" class="overflow-hidden rounded-card border border-line bg-surface shadow-card md:col-span-2 xl:col-span-3">
+            <div class="overflow-x-auto">
+              <table class="min-w-full text-left">
+                <caption class="px-5 py-4 text-left font-semibold">DataTable</caption>
+                <thead class="bg-[#F8FAFC] text-xs uppercase tracking-wide text-muted">
+                  <tr><th scope="col" class="px-5 py-3 font-semibold">Name</th><th scope="col" class="px-5 py-3 font-semibold">Category</th><th scope="col" class="px-5 py-3 text-right font-semibold">Price</th><th scope="col" class="px-5 py-3 font-semibold">Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr class="border-t border-line hover:bg-soft"><td class="px-5 py-3">Example item</td><td class="px-5 py-3 text-muted">Electronics</td><td class="tabular px-5 py-3 text-right">$499.00</td><td class="px-5 py-3"><span class="inline-flex rounded-full bg-success-light px-2.5 py-1 text-xs font-medium text-success-dark">Confirmed</span></td></tr>
+                  <tr class="border-t border-line hover:bg-soft"><td class="px-5 py-3">Another item</td><td class="px-5 py-3 text-muted">Accessories</td><td class="tabular px-5 py-3 text-right">$39.00</td><td class="px-5 py-3"><span class="inline-flex rounded-full bg-warning-light px-2.5 py-1 text-xs font-medium text-warning-dark">Pending</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="flex items-center justify-between border-t border-line px-5 py-3 text-muted">
+              <span>Showing 1–2 of 2</span>
+              <div class="flex gap-1">
+                <button type="button" disabled aria-label="Previous page" class="grid h-8 w-8 place-items-center rounded-control disabled:opacity-40">‹</button>
+                <button type="button" disabled aria-label="Next page" class="grid h-8 w-8 place-items-center rounded-control disabled:opacity-40">›</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+  // Sample data, kept separate from markup (design.md: "Keep data separate from presentation").
+  const data = {
+    orders: {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      thisWeek: [42, 58, 35, 70, 64, 82, 51],
+      lastWeek: [38, 41, 47, 52, 49, 60, 44],
+    },
+    customers: {
+      labels: ['Apr 07', 'Apr 08', 'Apr 09', 'Apr 10', 'Apr 11', 'Apr 12', 'Apr 13', 'Apr 14'],
+      thisWeek: [620, 710, 680, 820, 760, 900, 940, 950],
+      lastWeek: [480, 520, 560, 500, 590, 540, 600, 508],
+    },
+  };
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs) => {
+    const node = document.createElementNS(SVG_NS, tag);
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+    return node;
+  };
+
+  // Bar chart for WeeklyOrderUpdatesCard. PeriodSelect re-renders it with the chosen series.
+  function renderOrders(period) {
+    const svg = document.getElementById('orders-chart');
+    const values = data.orders[period];
+    const { labels } = data.orders;
+    const W = 560, H = 220, bottom = 190, top = 10, max = 100;
+    svg.replaceChildren();
+    [0, 25, 50, 75, 100].forEach((t) => {
+      const y = bottom - (t / max) * (bottom - top);
+      svg.append(el('line', { x1: 0, x2: W, y1: y, y2: y, stroke: '#E6EAF0', 'stroke-width': 1 }));
+    });
+    const slot = W / values.length, barW = 26;
+    values.forEach((v, i) => {
+      const h = (v / max) * (bottom - top);
+      const x = i * slot + (slot - barW) / 2;
+      svg.append(el('rect', { x, y: bottom - h, width: barW, height: h, rx: 6, fill: i === values.indexOf(Math.max(...values)) ? '#5D87FF' : '#ECF2FF' }));
+      const label = el('text', { x: x + barW / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': 12, fill: '#6B7280' });
+      label.textContent = labels[i];
+      svg.append(label);
+    });
+    const total = values.reduce((a, b) => a + b, 0);
+    const best = labels[values.indexOf(Math.max(...values))];
+    document.getElementById('orders-chart-summary').textContent =
+      `Total orders per day, ${period === 'thisWeek' ? 'this week' : 'last week'}: ${total} orders, highest on ${best}.`;
+  }
+
+  // Two-series line chart for CustomerTrendChart.
+  function renderCustomers() {
+    const svg = document.getElementById('customer-chart');
+    const { labels, thisWeek, lastWeek } = data.customers;
+    const W = 560, bottom = 210, top = 10, max = 1000;
+    const x = (i) => (i / (labels.length - 1)) * (W - 20) + 10;
+    const y = (v) => bottom - (v / max) * (bottom - top);
+    [0, 250, 500, 750, 1000].forEach((t) => svg.append(el('line', { x1: 0, x2: W, y1: y(t), y2: y(t), stroke: '#E6EAF0', 'stroke-width': 1 })));
+    const pts = (arr) => arr.map((v, i) => `${x(i)},${y(v)}`).join(' ');
+    svg.append(el('polygon', { points: `${x(0)},${bottom} ${pts(thisWeek)} ${x(thisWeek.length - 1)},${bottom}`, fill: '#5D87FF', opacity: 0.08 }));
+    svg.append(el('polyline', { points: pts(lastWeek), fill: 'none', stroke: '#49BEFF', 'stroke-width': 2, 'stroke-dasharray': '6 5' }));
+    svg.append(el('polyline', { points: pts(thisWeek), fill: 'none', stroke: '#5D87FF', 'stroke-width': 3, 'stroke-linejoin': 'round' }));
+    labels.forEach((l, i) => {
+      const t = el('text', { x: x(i), y: 234, 'text-anchor': i === 0 ? 'start' : i === labels.length - 1 ? 'end' : 'middle', 'font-size': 12, fill: '#6B7280' });
+      t.textContent = l;
+      svg.append(t);
+    });
+    document.getElementById('customer-chart-summary').textContent =
+      `Daily customers from April 07 to April 14 rose from ${thisWeek[0]} to ${thisWeek.at(-1)}; last week ranged from ${Math.min(...lastWeek)} to ${Math.max(...lastWeek)}.`;
+  }
+
+  renderOrders('thisWeek');
+  renderCustomers();
+  document.getElementById('orders-period').addEventListener('change', (e) => renderOrders(e.target.value));
+
+  // SearchField filters LatestReviewsSection rows; EmptyState shows when nothing matches.
+  document.getElementById('review-search').addEventListener('input', (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    let visible = 0;
+    document.querySelectorAll('#review-rows tr').forEach((row) => {
+      const match = row.textContent.toLowerCase().includes(q);
+      row.hidden = !match;
+      if (match) visible++;
+    });
+    document.getElementById('review-empty').classList.toggle('hidden', visible > 0);
+  });
+
+  // DashboardWelcomeNotice dismiss.
+  document.getElementById('welcome-dismiss').addEventListener('click', () => {
+    document.getElementById('welcome-notice').remove();
+  });
+
+  // AppSidebar mobile drawer.
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const toggle = document.getElementById('sidebar-toggle');
+  const setDrawer = (open) => {
+    sidebar.classList.toggle('-translate-x-full', !open);
+    backdrop.classList.toggle('hidden', !open);
+    toggle.setAttribute('aria-expanded', String(open));
+  };
+  toggle.addEventListener('click', () => setDrawer(sidebar.classList.contains('-translate-x-full')));
+  backdrop.addEventListener('click', () => setDrawer(false));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setDrawer(false); });
+</script>
+</body>
+</html>
