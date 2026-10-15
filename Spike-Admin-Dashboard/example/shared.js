@@ -5,7 +5,7 @@
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script src="shared.js"></script>
 
-  It does four things:
+  It does five things:
   1. Theme tokens — every color from design.md is a CSS variable (RGB triplet so
      Tailwind opacity modifiers like `bg-primary/10` work). Light values come
      from design.md; `*-light` / `*-dark` tints and the whole dark palette are
@@ -18,6 +18,10 @@
   4. Shell behaviour — mobile sidebar drawer ([data-drawer-toggle]) and the cart
      count badge ([data-cart-count]). The cart lives in localStorage so shop,
      product detail and checkout share it.
+  5. Current user — `window.profile` holds the signed-in user's profile
+     (localStorage, sample defaults). Any element with [data-profile="<field>"]
+     shows that field: name, initials, title, location, email, phone, bio, or
+     avatar (photo if uploaded, else initials). profile-edit.html saves it.
 */
 
 (function () {
@@ -169,6 +173,58 @@
     },
   };
 
+  // --- Current user profile (shown in the shell, edited on profile-edit.html) --
+  const PROFILE = 'spike-profile';
+  const PROFILE_DEFAULTS = {
+    firstName: 'Jonathan', lastName: 'Deo', title: 'Store Admin',
+    email: 'jonathan@example.test', phone: '+1 (555) 010-2030', location: 'San Francisco, CA',
+    website: 'https://example.test', language: 'English',
+    bio: 'Hello, I’m Jonathan. I run the online store and look after orders, stock and customer reviews. Coffee first, then dashboards.',
+    avatar: '', // data: URL of an uploaded photo, '' = show initials
+    notify: { orders: true, reviews: true, newsletter: false },
+  };
+
+  window.profile = {
+    defaults: PROFILE_DEFAULTS,
+    get() {
+      let saved = {};
+      try { saved = JSON.parse(read(PROFILE) || '{}'); } catch { /* corrupt value */ }
+      return { ...PROFILE_DEFAULTS, ...saved, notify: { ...PROFILE_DEFAULTS.notify, ...(saved.notify || {}) } };
+    },
+    set(p) {
+      write(PROFILE, JSON.stringify(p));
+      window.profile.render();
+    },
+    reset() {
+      try { localStorage.removeItem(PROFILE); } catch { /* storage blocked */ }
+      window.profile.render();
+    },
+    fields(p = window.profile.get()) {
+      const name = `${p.firstName} ${p.lastName}`.trim();
+      const initials = (p.firstName[0] || '') + (p.lastName[0] || '');
+      return { ...p, name, initials: initials.toUpperCase() };
+    },
+    render() {
+      const f = window.profile.fields();
+      document.querySelectorAll('[data-profile]').forEach((el) => {
+        const key = el.dataset.profile;
+        if (key === 'avatar') {
+          el.replaceChildren();
+          if (f.avatar) {
+            const img = document.createElement('img');
+            img.src = f.avatar; img.alt = ''; img.className = 'h-full w-full object-cover';
+            el.append(img);
+          } else {
+            el.textContent = f.initials;
+          }
+        } else {
+          el.textContent = f[key] ?? '';
+          if (el.tagName === 'A' && key === 'email') el.href = `mailto:${f.email}`;
+        }
+      });
+    },
+  };
+
   // --- Wire up shell controls once the DOM exists -----------------------------
   document.addEventListener('DOMContentLoaded', () => {
     labelToggles();
@@ -176,6 +232,7 @@
       b.addEventListener('click', () => setTheme(!isDark())));
 
     window.cart.renderCount();
+    window.profile.render();
 
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('sidebar-backdrop');

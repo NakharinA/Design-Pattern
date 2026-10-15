@@ -13,6 +13,8 @@
     and `data-component="<Name>"`. Pieces with no spec file are marked
     `Component: <Name> (no spec)`.
   - All names, products and numbers are sample data. No external images.
+  - [data-profile="<field>"] elements show the current user (see shared.js).
+    Text inside them is only the default before the script runs.
   - Styling: Tailwind CSS via the Play CDN — needs internet to load styles.
 -->
 <html lang="en">
@@ -53,6 +55,10 @@
         <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
         Checkout
       </a>
+      <a href="customers.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 12h18M3 19h18M8 5v14"/></svg>
+        Customers
+      </a>
       <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">Apps</p>
       <a href="contacts.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
         <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0114 0M17 11a3 3 0 100-6M22 21a6 6 0 00-4-5.6"/></svg>
@@ -63,12 +69,16 @@
         <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>
         User Profile
       </a>
+      <a href="profile-edit.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4"/></svg>
+        Edit Profile
+      </a>
     </nav>
     <a href="profile.html" class="m-4 flex items-center gap-3 rounded-card bg-soft p-3 hover:bg-primary-light">
-      <span class="grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-white">JD</span>
+      <span data-profile="avatar" class="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-full bg-primary text-xs font-semibold text-white">JD</span>
       <span class="min-w-0">
-        <span class="block truncate font-medium">Jonathan Deo</span>
-        <span class="block truncate text-xs text-muted">Admin</span>
+        <span data-profile="name" class="block truncate font-medium">Jonathan Deo</span>
+        <span data-profile="title" class="block truncate text-xs text-muted">Store Admin</span>
       </span>
     </a>
   </aside>
@@ -103,7 +113,7 @@
           <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
           <span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"></span>
         </button>
-        <a href="profile.html" aria-label="Open profile" class="ml-1 grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">JD</a>
+        <a href="profile.html" aria-label="Open profile" data-profile="avatar" class="ml-1 grid h-9 w-9 place-items-center overflow-hidden rounded-full bg-primary text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">JD</a>
       </div>
     </header>
 

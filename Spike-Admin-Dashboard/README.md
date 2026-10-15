@@ -27,17 +27,21 @@ tables and review widgets beside a collapsible sidebar.
   |---|---|
   | [`index.html`](example/index.html) | Dashboard overview + a gallery of primitives and states |
   | [`profile.html`](example/profile.html) | User profile: cover, stats, tabs (Profile / Followers / Gallery), posts |
+  | [`profile-edit.html`](example/profile-edit.html) | Edit profile: photo upload, personal info with validation, notification switches, change password. Saved changes show on the profile page and sidebar |
+  | [`customers.html`](example/customers.html) | Customers table with pagination: search, status filter, sortable columns, row selection, rows per page, CSV export |
   | [`contacts.html`](example/contacts.html) | Contacts app: filters, searchable list, detail pane, add-contact dialog |
   | [`ecommerce-shop.html`](example/ecommerce-shop.html) | Product grid with category / price / rating filters, sort, search |
   | [`ecommerce-detail.html`](example/ecommerce-detail.html) | Product detail (`?id=1`–`8`): gallery, colors, quantity, add to cart, reviews |
   | [`ecommerce-checkout.html`](example/ecommerce-checkout.html) | 3-step checkout (Cart, Billing, Payment) with order summary |
 
 - [`shared.js`](example/shared.js) — loaded by every page: color tokens as CSS
-  variables, `tailwind.config`, light/dark theme, mobile drawer, cart.
+  variables, `tailwind.config`, light/dark theme, mobile drawer, cart, and the
+  current user's profile (`[data-profile]` elements).
 - [`ecommerce.js`](example/ecommerce.js) — sample product catalog for the three
   eCommerce pages.
 
-> The dark theme and the profile, contacts and eCommerce pages are **not** in
+> The dark theme and the profile, edit-profile, customers, contacts and
+> eCommerce pages are **not** in
 > the extracted spec. They are proposed in the same style; their components
 > have no file in `element/`.
 

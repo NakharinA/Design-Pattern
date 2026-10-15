@@ -1,0 +1,439 @@
+<!doctype html>
+<!--
+  Spike Admin Dashboard — Edit Profile (example page)
+
+  Edit profile / account settings: avatar, personal info, password, notifications; saves and shows on profile.html.
+
+  Part of a set of example pages that share one shell. Read the conventions:
+  - shared.js holds the theme tokens (light from design.md, dark PROPOSED),
+    tailwind.config, the light/dark toggle, the mobile drawer and the cart.
+  - Use token class names only (bg-surface, text-muted, border-line, bg-primary…),
+    never stock Tailwind colors, so the page follows light/dark automatically.
+  - Components from element/*.md are marked `Component: <Name> · element/<file>.md`
+    and `data-component="<Name>"`. Pieces with no spec file are marked
+    `Component: <Name> (no spec)`.
+  - All names, products and numbers are sample data. No external images.
+  - [data-profile="<field>"] elements show the current user (see shared.js).
+    Text inside them is only the default before the script runs.
+  - Styling: Tailwind CSS via the Play CDN — needs internet to load styles.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spike Admin — Edit Profile</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script src="shared.js"></script>
+</head>
+<body class="bg-page font-sans text-sm text-ink antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- Component: AppSidebar · element/design-sidebar.md -->
+  <aside id="sidebar" data-component="AppSidebar"
+         class="fixed inset-y-0 left-0 z-40 flex w-[260px] -translate-x-full flex-col border-r border-line bg-surface transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0">
+    <div class="flex h-16 items-center gap-2 px-6">
+      <span class="grid h-8 w-8 place-items-center rounded-control bg-primary text-sm font-bold text-white">S</span>
+      <span class="text-lg font-semibold">Spike</span>
+    </div>
+    <nav aria-label="Main navigation" class="flex-1 overflow-y-auto px-4 pb-6">
+      <p class="px-3 pb-2 pt-4 text-xs font-semibold uppercase tracking-wide text-muted">Home</p>
+      <a href="index.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>
+        Dashboard
+      </a>
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">eCommerce</p>
+      <a href="ecommerce-shop.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-2 9H8L6 3H3M9 20a1 1 0 100-2 1 1 0 000 2zm9 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
+        Shop
+      </a>
+      <a href="ecommerce-detail.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12l-8 8-9-9V3h8l9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+        Product Detail
+      </a>
+      <a href="ecommerce-checkout.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
+        Checkout
+      </a>
+      <a href="customers.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 12h18M3 19h18M8 5v14"/></svg>
+        Customers
+      </a>
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">Apps</p>
+      <a href="contacts.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0114 0M17 11a3 3 0 100-6M22 21a6 6 0 00-4-5.6"/></svg>
+        Contacts
+      </a>
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">Pages</p>
+      <a href="profile.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>
+        User Profile
+      </a>
+      <a href="profile-edit.html" aria-current="page" class="flex h-11 items-center gap-3 rounded-control bg-primary px-3 font-medium text-white">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4"/></svg>
+        Edit Profile
+      </a>
+    </nav>
+    <a href="profile.html" class="m-4 flex items-center gap-3 rounded-card bg-soft p-3 hover:bg-primary-light">
+      <span data-profile="avatar" class="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-full bg-primary text-xs font-semibold text-white">JD</span>
+      <span class="min-w-0">
+        <span data-profile="name" class="block truncate font-medium">Jonathan Deo</span>
+        <span data-profile="title" class="block truncate text-xs text-muted">Store Admin</span>
+      </span>
+    </a>
+  </aside>
+  <div id="sidebar-backdrop" class="fixed inset-0 z-30 hidden bg-black/50 lg:hidden"></div>
+
+  <div class="flex min-w-0 flex-1 flex-col">
+
+    <!-- Component: AppTopbar · element/design-topbar.md -->
+    <header data-component="AppTopbar" class="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-surface px-4 md:px-6">
+      <div class="flex items-center gap-3">
+        <!-- Component: IconButton · element/design-icon-button.md -->
+        <button type="button" data-drawer-toggle aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false" data-component="IconButton"
+                class="grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary lg:hidden">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <h1 class="text-lg font-semibold">Edit Profile</h1>
+      </div>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <!-- Component: ThemeToggle (no spec) — flips light/dark, see shared.js -->
+        <button type="button" data-theme-toggle aria-label="Switch theme"
+                class="grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+          <svg aria-hidden="true" class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 13a9 9 0 11-10-10 7 7 0 0010 10z"/></svg>
+          <svg aria-hidden="true" class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <a href="ecommerce-checkout.html" data-cart-link aria-label="Cart"
+           class="relative grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-2 9H8L6 3H3M9 20a1 1 0 100-2 1 1 0 000 2zm9 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
+          <span data-cart-count class="absolute -right-0.5 -top-0.5 hidden min-w-[18px] rounded-full bg-primary px-1 text-center text-[11px] font-semibold leading-[18px] text-white"></span>
+        </a>
+        <button type="button" aria-label="Open notifications (2 unread)" data-component="IconButton"
+                class="relative hidden h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary sm:grid">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+          <span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"></span>
+        </button>
+        <a href="profile.html" aria-label="Open profile" data-profile="avatar" class="ml-1 grid h-9 w-9 place-items-center overflow-hidden rounded-full bg-primary text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">JD</a>
+      </div>
+    </header>
+
+    <main class="flex-1 p-4 md:p-6">
+      <!-- Component: Breadcrumb (no spec) -->
+      <nav aria-label="Breadcrumb" class="mb-4 text-muted">
+        <ol class="flex flex-wrap items-center gap-2">
+          <li><a href="profile.html" class="hover:text-primary">User Profile</a></li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" class="font-medium text-ink">Edit</li>
+        </ol>
+      </nav>
+
+      <!-- Component: ProfileForm (no spec) — one form, saved to window.profile (shared.js).
+           Uses TextInput · element/design-input.md, Select · element/design-select.md,
+           Button · element/design-button.md. -->
+      <form id="profile-form" novalidate data-component="ProfileForm" class="grid grid-cols-1 gap-5 xl:grid-cols-12 xl:gap-6">
+
+        <div class="space-y-5 xl:col-span-4 xl:space-y-6">
+          <!-- Component: AvatarUpload (no spec) -->
+          <section data-component="AvatarUpload" aria-labelledby="photo-title" class="rounded-card border border-line bg-surface p-5 text-center shadow-card md:p-6">
+            <h2 id="photo-title" class="text-left text-base font-semibold">Profile photo</h2>
+            <span id="avatar-preview" class="mx-auto mt-5 grid h-28 w-28 place-items-center overflow-hidden rounded-full bg-primary text-3xl font-semibold text-white" aria-hidden="true"></span>
+            <div class="mt-5 flex justify-center gap-3">
+              <label class="inline-flex h-10 cursor-pointer items-center rounded-control bg-primary px-4 font-medium text-white hover:bg-primary-dark focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 focus-within:ring-offset-surface">
+                Upload
+                <input id="avatar-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="sr-only" />
+              </label>
+              <button type="button" id="avatar-remove" class="inline-flex h-10 items-center rounded-control border border-line px-4 font-medium text-muted hover:border-danger hover:text-danger-dark focus:outline-none focus:ring-2 focus:ring-danger disabled:opacity-40">Remove</button>
+            </div>
+            <p id="avatar-hint" class="mt-3 text-xs text-muted">JPG, PNG, WebP or GIF, up to 5 MB.</p>
+          </section>
+
+          <!-- Component: NotificationSettings (no spec) — switches are checkboxes with role="switch" -->
+          <section data-component="NotificationSettings" aria-labelledby="notify-title" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6">
+            <h2 id="notify-title" class="text-base font-semibold">Email notifications</h2>
+            <ul class="mt-4 divide-y divide-line">
+              <li class="flex items-center justify-between gap-4 py-3">
+                <label for="notify-orders"><span class="block font-medium">New orders</span><span class="text-xs text-muted">When a customer places an order</span></label>
+                <input id="notify-orders" name="notify.orders" type="checkbox" role="switch" class="switch" />
+              </li>
+              <li class="flex items-center justify-between gap-4 py-3">
+                <label for="notify-reviews"><span class="block font-medium">Product reviews</span><span class="text-xs text-muted">When a review needs approval</span></label>
+                <input id="notify-reviews" name="notify.reviews" type="checkbox" role="switch" class="switch" />
+              </li>
+              <li class="flex items-center justify-between gap-4 py-3">
+                <label for="notify-newsletter"><span class="block font-medium">Newsletter</span><span class="text-xs text-muted">Product news, once a month</span></label>
+                <input id="notify-newsletter" name="notify.newsletter" type="checkbox" role="switch" class="switch" />
+              </li>
+            </ul>
+          </section>
+        </div>
+
+        <div class="space-y-5 xl:col-span-8 xl:space-y-6">
+          <section aria-labelledby="info-title" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6">
+            <h2 id="info-title" class="text-base font-semibold">Personal information</h2>
+            <p class="text-muted">Shown on your profile and in the sidebar.</p>
+            <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label for="firstName" class="block font-medium">First name <span class="text-danger-dark" aria-hidden="true">*</span></label>
+                <input id="firstName" name="firstName" required maxlength="40" autocomplete="given-name" aria-describedby="firstName-error" class="field mt-1" />
+                <p id="firstName-error" class="error mt-1 hidden text-xs text-danger-dark">Enter your first name.</p>
+              </div>
+              <div>
+                <label for="lastName" class="block font-medium">Last name <span class="text-danger-dark" aria-hidden="true">*</span></label>
+                <input id="lastName" name="lastName" required maxlength="40" autocomplete="family-name" aria-describedby="lastName-error" class="field mt-1" />
+                <p id="lastName-error" class="error mt-1 hidden text-xs text-danger-dark">Enter your last name.</p>
+              </div>
+              <div>
+                <label for="title" class="block font-medium">Job title</label>
+                <input id="title" name="title" maxlength="60" autocomplete="organization-title" class="field mt-1" />
+              </div>
+              <div>
+                <label for="email" class="block font-medium">Email <span class="text-danger-dark" aria-hidden="true">*</span></label>
+                <input id="email" name="email" type="email" required autocomplete="email" aria-describedby="email-error" class="field mt-1" />
+                <p id="email-error" class="error mt-1 hidden text-xs text-danger-dark">Enter a valid email, like name@example.com.</p>
+              </div>
+              <div>
+                <label for="phone" class="block font-medium">Phone</label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" class="field mt-1" />
+              </div>
+              <div>
+                <label for="location" class="block font-medium">Location</label>
+                <input id="location" name="location" autocomplete="address-level2" class="field mt-1" />
+              </div>
+              <div>
+                <label for="website" class="block font-medium">Website</label>
+                <input id="website" name="website" type="url" placeholder="https://" aria-describedby="website-error" class="field mt-1" />
+                <p id="website-error" class="error mt-1 hidden text-xs text-danger-dark">Enter a full URL starting with https://</p>
+              </div>
+              <div>
+                <label for="language" class="block font-medium">Language</label>
+                <select id="language" name="language" class="field mt-1">
+                  <option>English</option><option>ไทย (Thai)</option><option>日本語 (Japanese)</option><option>Español</option>
+                </select>
+              </div>
+              <div class="sm:col-span-2">
+                <div class="flex items-baseline justify-between">
+                  <label for="bio" class="block font-medium">Bio</label>
+                  <span id="bio-count" class="tabular text-xs text-muted" aria-live="polite"></span>
+                </div>
+                <textarea id="bio" name="bio" rows="4" maxlength="300" class="field mt-1 resize-y py-2"></textarea>
+              </div>
+            </div>
+          </section>
+
+          <!-- Save bar: sticky at the bottom, shows unsaved state -->
+          <div class="sticky bottom-4 z-10 flex flex-wrap items-center justify-between gap-3 rounded-card border border-line bg-surface p-4 shadow-card">
+            <p id="save-status" role="status" aria-live="polite" class="text-muted">No changes</p>
+            <div class="flex gap-3">
+              <button type="button" id="cancel" disabled class="inline-flex h-10 items-center rounded-control px-4 font-medium text-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-40 disabled:hover:bg-transparent">Discard</button>
+              <button type="submit" id="save" disabled class="inline-flex h-10 items-center rounded-control bg-primary px-4 font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-50">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- Component: ChangePassword (no spec) — separate form; demo only, nothing is stored -->
+      <form id="password-form" novalidate aria-labelledby="pw-title" class="mt-5 rounded-card border border-line bg-surface p-5 shadow-card md:p-6 xl:ml-[calc(33.333%+0.5rem)] xl:mt-6">
+        <h2 id="pw-title" class="text-base font-semibold">Change password</h2>
+        <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="sm:col-span-2">
+            <label for="pw-current" class="block font-medium">Current password</label>
+            <div class="relative mt-1">
+              <input id="pw-current" type="password" required autocomplete="current-password" aria-describedby="pw-current-error" class="field pr-16" />
+              <button type="button" data-reveal="pw-current" class="absolute right-2 top-1/2 -translate-y-1/2 rounded px-2 py-1 text-xs font-medium text-primary hover:bg-primary-light">Show</button>
+            </div>
+            <p id="pw-current-error" class="error mt-1 hidden text-xs text-danger-dark">Enter your current password.</p>
+          </div>
+          <div>
+            <label for="pw-new" class="block font-medium">New password</label>
+            <div class="relative mt-1">
+              <input id="pw-new" type="password" required minlength="8" autocomplete="new-password" aria-describedby="pw-strength pw-new-error" class="field pr-16" />
+              <button type="button" data-reveal="pw-new" class="absolute right-2 top-1/2 -translate-y-1/2 rounded px-2 py-1 text-xs font-medium text-primary hover:bg-primary-light">Show</button>
+            </div>
+            <!-- Strength meter: 4 bars + text, so it does not rely on color -->
+            <div class="mt-2 grid grid-cols-4 gap-1" aria-hidden="true">
+              <span class="pw-bar h-1.5 rounded-full bg-soft"></span><span class="pw-bar h-1.5 rounded-full bg-soft"></span><span class="pw-bar h-1.5 rounded-full bg-soft"></span><span class="pw-bar h-1.5 rounded-full bg-soft"></span>
+            </div>
+            <p id="pw-strength" class="mt-1 text-xs text-muted">At least 8 characters, with a number and a symbol.</p>
+            <p id="pw-new-error" class="error mt-1 hidden text-xs text-danger-dark">Use at least 8 characters.</p>
+          </div>
+          <div>
+            <label for="pw-confirm" class="block font-medium">Confirm new password</label>
+            <input id="pw-confirm" type="password" required autocomplete="new-password" aria-describedby="pw-confirm-error" class="field mt-1" />
+            <p id="pw-confirm-error" class="error mt-1 hidden text-xs text-danger-dark">Passwords don’t match.</p>
+          </div>
+        </div>
+        <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+          <p id="pw-status" role="status" aria-live="polite" class="text-success-dark"></p>
+          <button type="submit" class="inline-flex h-10 items-center rounded-control border border-primary px-4 font-medium text-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary">Update password</button>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
+
+<style type="text/tailwindcss">
+  /* Shared field look (TextInput spec): 40px, 8px radius, 1px border, focus ring. */
+  .field { @apply block h-10 w-full rounded-control border border-line bg-surface px-3 placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30; }
+  textarea.field { height: auto; }
+  .field[aria-invalid="true"] { @apply border-danger focus:ring-danger/30; }
+  /* Toggle switch drawn on a native checkbox, so it stays keyboard and screen-reader friendly. */
+  .switch { @apply relative h-6 w-11 shrink-0 cursor-pointer appearance-none rounded-full bg-line transition-colors checked:bg-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface; }
+  .switch::before { content: ''; @apply absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform; }
+  .switch:checked::before { @apply translate-x-5; }
+</style>
+<script>
+  const form = document.getElementById('profile-form');
+  const $ = (id) => document.getElementById(id);
+  let saved = profile.get();
+  let draftAvatar = saved.avatar;
+
+  // --- Fill / read the form --------------------------------------------------
+  function fill(p) {
+    for (const el of form.elements) {
+      if (!el.name) continue;
+      if (el.name.startsWith('notify.')) el.checked = !!p.notify[el.name.slice(7)];
+      else el.value = p[el.name] ?? '';
+    }
+    draftAvatar = p.avatar;
+    renderAvatar();
+    updateBioCount();
+    clearErrors();
+  }
+  function read() {
+    const p = { ...saved, notify: { ...saved.notify }, avatar: draftAvatar };
+    for (const el of form.elements) {
+      if (!el.name) continue;
+      if (el.name.startsWith('notify.')) p.notify[el.name.slice(7)] = el.checked;
+      else p[el.name] = el.value.trim();
+    }
+    return p;
+  }
+  const isDirty = () => JSON.stringify(read()) !== JSON.stringify(saved);
+
+  function refreshSaveBar(message) {
+    const dirty = isDirty();
+    $('save').disabled = !dirty;
+    $('cancel').disabled = !dirty;
+    $('save-status').textContent = message || (dirty ? 'You have unsaved changes' : 'No changes');
+    $('save-status').className = message ? 'text-success-dark' : dirty ? 'font-medium text-warning-dark' : 'text-muted';
+  }
+
+  // --- Avatar ----------------------------------------------------------------
+  function renderAvatar() {
+    const box = $('avatar-preview');
+    box.replaceChildren();
+    if (draftAvatar) {
+      box.append(Object.assign(document.createElement('img'), { src: draftAvatar, alt: '', className: 'h-full w-full object-cover' }));
+    } else {
+      const f = form.firstName.value || saved.firstName, l = form.lastName.value || saved.lastName;
+      box.textContent = ((f[0] || '') + (l[0] || '')).toUpperCase();
+    }
+    $('avatar-remove').disabled = !draftAvatar;
+  }
+  // Downscale to a 256px square JPEG so the data URL stays small enough for localStorage.
+  $('avatar-input').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    const hint = $('avatar-hint');
+    if (!file.type.startsWith('image/') || file.size > 5 * 1024 * 1024) {
+      hint.textContent = 'That file isn’t an image under 5 MB. Try another.';
+      hint.className = 'mt-3 text-xs text-danger-dark';
+      return;
+    }
+    const img = new Image();
+    img.onload = () => {
+      const size = 256, c = document.createElement('canvas');
+      c.width = c.height = size;
+      const s = Math.min(img.width, img.height);
+      c.getContext('2d').drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
+      draftAvatar = c.toDataURL('image/jpeg', 0.85);
+      URL.revokeObjectURL(img.src);
+      hint.textContent = 'New photo ready — save to apply.';
+      hint.className = 'mt-3 text-xs text-muted';
+      renderAvatar(); refreshSaveBar();
+    };
+    img.onerror = () => { hint.textContent = 'Couldn’t read that image.'; hint.className = 'mt-3 text-xs text-danger-dark'; };
+    img.src = URL.createObjectURL(file);
+  });
+  $('avatar-remove').addEventListener('click', () => { draftAvatar = ''; renderAvatar(); refreshSaveBar(); });
+
+  // --- Validation ------------------------------------------------------------
+  function setError(el, bad) {
+    el.setAttribute('aria-invalid', bad ? 'true' : 'false');
+    const msg = $(el.id + '-error');
+    if (msg) msg.classList.toggle('hidden', !bad);
+  }
+  function clearErrors() { form.querySelectorAll('[aria-invalid]').forEach((el) => setError(el, false)); }
+  function validate() {
+    let first = null;
+    ['firstName', 'lastName', 'email', 'website'].forEach((name) => {
+      const el = form[name];
+      el.value = el.value.trim();
+      const bad = !el.checkValidity();
+      setError(el, bad);
+      if (bad && !first) first = el;
+    });
+    if (first) first.focus();
+    return !first;
+  }
+
+  function updateBioCount() { $('bio-count').textContent = `${form.bio.value.length} / 300`; }
+
+  // --- Events ----------------------------------------------------------------
+  form.addEventListener('input', (e) => {
+    if (e.target.getAttribute('aria-invalid') === 'true' && e.target.checkValidity()) setError(e.target, false);
+    if (e.target === form.bio) updateBioCount();
+    if (e.target === form.firstName || e.target === form.lastName) renderAvatar();
+    refreshSaveBar();
+  });
+  form.addEventListener('change', () => refreshSaveBar());
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!validate()) { $('save-status').textContent = 'Fix the highlighted fields'; $('save-status').className = 'font-medium text-danger-dark'; return; }
+    saved = read();
+    profile.set(saved);
+    refreshSaveBar('Saved. Your profile is updated.');
+  });
+  $('cancel').addEventListener('click', () => { fill(saved); refreshSaveBar(); });
+  window.addEventListener('beforeunload', (e) => { if (isDirty()) e.preventDefault(); });
+
+  // --- Password (demo) -------------------------------------------------------
+  const pw = { current: $('pw-current'), next: $('pw-new'), confirm: $('pw-confirm') };
+  document.querySelectorAll('[data-reveal]').forEach((b) => b.addEventListener('click', () => {
+    const input = $(b.dataset.reveal);
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    b.textContent = show ? 'Hide' : 'Show';
+    b.setAttribute('aria-label', `${show ? 'Hide' : 'Show'} password`);
+  }));
+  function strength(v) {
+    return [v.length >= 8, /\d/.test(v), /[^A-Za-z0-9]/.test(v), v.length >= 12 && /[a-z]/.test(v) && /[A-Z]/.test(v)].filter(Boolean).length;
+  }
+  pw.next.addEventListener('input', () => {
+    const s = strength(pw.next.value);
+    const colors = ['bg-danger', 'bg-danger', 'bg-warning', 'bg-success', 'bg-success'];
+    document.querySelectorAll('.pw-bar').forEach((bar, i) => { bar.className = `pw-bar h-1.5 rounded-full ${i < s ? colors[s] : 'bg-soft'}`; });
+    $('pw-strength').textContent = pw.next.value ? `Strength: ${['Too weak', 'Weak', 'Fair', 'Good', 'Strong'][s]}` : 'At least 8 characters, with a number and a symbol.';
+  });
+  $('password-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    $('pw-status').textContent = '';
+    const bad = {
+      current: !pw.current.value,
+      next: pw.next.value.length < 8,
+      confirm: !pw.confirm.value || pw.confirm.value !== pw.next.value,
+    };
+    setError(pw.current, bad.current); setError(pw.next, bad.next); setError(pw.confirm, bad.confirm);
+    const firstBad = Object.keys(bad).find((k) => bad[k]);
+    if (firstBad) { pw[firstBad].focus(); return; }
+    e.target.reset();
+    pw.next.dispatchEvent(new Event('input'));
+    $('pw-status').textContent = 'Password updated (demo — nothing was sent).';
+  });
+
+  fill(saved);
+  refreshSaveBar();
+</script>
+</body>
+</html>
