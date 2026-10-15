@@ -20,12 +20,12 @@ Design-Pattern/
 └── <Design-Name>/
     ├── README.md              # required: preview picture + short description
     ├── design.md              # design details: colors, typography, spacing, layout
-    ├── elements/              # reusable pieces (buttons, cards, nav, ...)
+    ├── element/               # one spec per component: design-<component>.md
     └── assets/                # screenshots and images used by the docs
 ```
 
 `README.md` is the only required file in a design folder. `design.md`,
-`elements/` and `assets/` are the usual contents; add other files when a design
+`element/` and `assets/` are the usual contents; add other files when a design
 needs them.
 
 ## Conventions
@@ -46,13 +46,20 @@ needs them.
   **Source:** <url of the website it came from>
   ```
 
+- **Element files** — one file per component, named `design-<component>.md`,
+  with the sections: Description & Use Case, Anatomy & Structure, Visual
+  Specifications, States & Variants, HTML/Tailwind Blueprint, Implementation
+  Notes. `design.md` lists every element file in its Component Index.
 - **Images** — keep them inside the design's own `assets/` folder and link them
   with relative paths, so each design folder stays self-contained.
 - **Source** — always record where the design came from.
 
 ## When adding a new design
 
-1. Create `<Design-Name>/` with at least `README.md`.
+1. Create `<Design-Name>/` with at least `README.md`. When importing an
+   extracted package, keep its `design.md` and `element/` as-is and rewrite its
+   `README.md` to the template above (with a component table grouped by role —
+   see `Spike-Admin-Dashboard/README.md`).
 2. Add a row for it in the table in the root `README.md`, linking to the folder.
 
 Keep the root `README.md` index in sync whenever a design folder is added,

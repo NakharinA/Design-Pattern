@@ -11,15 +11,15 @@ Each design has its own folder:
 <Design-Name>/
 ├── README.md     # preview picture + short description
 ├── design.md     # design details: colors, typography, spacing, layout
-├── elements/     # reusable pieces (buttons, cards, nav, ...)
+├── element/      # one spec per component: design-<component>.md
 └── assets/       # screenshots and images
 ```
 
-Open a design's `README.md` for a quick look, then `design.md` and `elements/`
+Open a design's `README.md` for a quick look, then `design.md` and `element/`
 for the details.
 
 ## Designs
 
 | Design | Description | Source |
 |---|---|---|
-| _No designs yet_ | | |
+| [Spike Admin Dashboard](Spike-Admin-Dashboard/) | Light eCommerce admin dashboard — blue primary, KPI cards, charts, tables, sidebar layout | [spike-nuxtjs-pro](https://spike-nuxtjs-pro-main.netlify.app/dashboards/dashboard1) |
