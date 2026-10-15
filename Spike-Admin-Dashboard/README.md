@@ -33,8 +33,8 @@ tables and review widgets beside a collapsible sidebar.
   | [`ecommerce-shop.html`](example/ecommerce-shop.html) | Product grid with category / price / rating filters, sort, search |
   | [`ecommerce-detail.html`](example/ecommerce-detail.html) | Product detail (`?id=1`–`8`): gallery, colors, quantity, add to cart, reviews |
   | [`ecommerce-checkout.html`](example/ecommerce-checkout.html) | 3-step checkout (Cart, Billing, Payment) with order summary |
-  | [`login.html`](example/login.html) | Sign in: demo account, wrong-password alert, forgot-password view |
-  | [`register.html`](example/register.html) | Create account: password strength checklist, terms; the new name shows in the shell |
+  | [`login.html`](example/login.html) | Sign in, laid out like the real [Spike login](https://spike-nuxtjs-pro-main.netlify.app/auth/login): blobs, big card, illustration + form. Demo account, wrong-password alert, forgot-password view |
+  | [`register.html`](example/register.html) | Sign up, same layout as login (Name, Email Address, Password). Strength checklist; the new name shows in the shell |
 
 - [`shared.js`](example/shared.js) — loaded by every page: color tokens as CSS
   variables, `tailwind.config`, light/dark theme, mobile drawer, cart, and the
@@ -46,6 +46,12 @@ tables and review widgets beside a collapsible sidebar.
 > eCommerce pages are **not** in
 > the extracted spec. They are proposed in the same style; their components
 > have no file in `element/`.
+
+> **Live-site check (login/register).** The real Spike pages use primary
+> `#0085DB`, page background `#F0F5F9` and the font *Plus Jakarta Sans*.
+> `design.md` (and every example page) still uses the proposed `#5D87FF`
+> and a system font. The login/register layout follows the live site, but
+> colors stay on the shared tokens so all pages match.
 
 ### Components
 
