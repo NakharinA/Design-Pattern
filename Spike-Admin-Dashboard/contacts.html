@@ -1,0 +1,330 @@
+<!doctype html>
+<!--
+  Spike Admin Dashboard — Contacts (example page)
+
+  Contacts app: filter list, searchable contact list, detail pane, star toggle, add-contact dialog.
+
+  Part of a set of example pages that share one shell. Read the conventions:
+  - shared.js holds the theme tokens (light from design.md, dark PROPOSED),
+    tailwind.config, the light/dark toggle, the mobile drawer and the cart.
+  - Use token class names only (bg-surface, text-muted, border-line, bg-primary…),
+    never stock Tailwind colors, so the page follows light/dark automatically.
+  - Components from element/*.md are marked `Component: <Name> · element/<file>.md`
+    and `data-component="<Name>"`. Pieces with no spec file are marked
+    `Component: <Name> (no spec)`.
+  - All names, products and numbers are sample data. No external images.
+  - Styling: Tailwind CSS via the Play CDN — needs internet to load styles.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spike Admin — Contacts</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script src="shared.js"></script>
+</head>
+<body class="bg-page font-sans text-sm text-ink antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- Component: AppSidebar · element/design-sidebar.md -->
+  <aside id="sidebar" data-component="AppSidebar"
+         class="fixed inset-y-0 left-0 z-40 flex w-[260px] -translate-x-full flex-col border-r border-line bg-surface transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0">
+    <div class="flex h-16 items-center gap-2 px-6">
+      <span class="grid h-8 w-8 place-items-center rounded-control bg-primary text-sm font-bold text-white">S</span>
+      <span class="text-lg font-semibold">Spike</span>
+    </div>
+    <nav aria-label="Main navigation" class="flex-1 overflow-y-auto px-4 pb-6">
+      <p class="px-3 pb-2 pt-4 text-xs font-semibold uppercase tracking-wide text-muted">Home</p>
+      <a href="example.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>
+        Dashboard
+      </a>
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">eCommerce</p>
+      <a href="ecommerce-shop.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-2 9H8L6 3H3M9 20a1 1 0 100-2 1 1 0 000 2zm9 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
+        Shop
+      </a>
+      <a href="ecommerce-detail.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12l-8 8-9-9V3h8l9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+        Product Detail
+      </a>
+      <a href="ecommerce-checkout.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
+        Checkout
+      </a>
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">Apps</p>
+      <a href="contacts.html" aria-current="page" class="flex h-11 items-center gap-3 rounded-control bg-primary px-3 font-medium text-white">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0114 0M17 11a3 3 0 100-6M22 21a6 6 0 00-4-5.6"/></svg>
+        Contacts
+      </a>
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">Pages</p>
+      <a href="profile.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>
+        User Profile
+      </a>
+    </nav>
+    <a href="profile.html" class="m-4 flex items-center gap-3 rounded-card bg-soft p-3 hover:bg-primary-light">
+      <span class="grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-white">JD</span>
+      <span class="min-w-0">
+        <span class="block truncate font-medium">Jonathan Deo</span>
+        <span class="block truncate text-xs text-muted">Admin</span>
+      </span>
+    </a>
+  </aside>
+  <div id="sidebar-backdrop" class="fixed inset-0 z-30 hidden bg-black/50 lg:hidden"></div>
+
+  <div class="flex min-w-0 flex-1 flex-col">
+
+    <!-- Component: AppTopbar · element/design-topbar.md -->
+    <header data-component="AppTopbar" class="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-surface px-4 md:px-6">
+      <div class="flex items-center gap-3">
+        <!-- Component: IconButton · element/design-icon-button.md -->
+        <button type="button" data-drawer-toggle aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false" data-component="IconButton"
+                class="grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary lg:hidden">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <h1 class="text-lg font-semibold">Contacts</h1>
+      </div>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <!-- Component: ThemeToggle (no spec) — flips light/dark, see shared.js -->
+        <button type="button" data-theme-toggle aria-label="Switch theme"
+                class="grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+          <svg aria-hidden="true" class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 13a9 9 0 11-10-10 7 7 0 0010 10z"/></svg>
+          <svg aria-hidden="true" class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <a href="ecommerce-checkout.html" data-cart-link aria-label="Cart"
+           class="relative grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-2 9H8L6 3H3M9 20a1 1 0 100-2 1 1 0 000 2zm9 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
+          <span data-cart-count class="absolute -right-0.5 -top-0.5 hidden min-w-[18px] rounded-full bg-primary px-1 text-center text-[11px] font-semibold leading-[18px] text-white"></span>
+        </a>
+        <button type="button" aria-label="Open notifications (2 unread)" data-component="IconButton"
+                class="relative hidden h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary sm:grid">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+          <span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"></span>
+        </button>
+        <a href="profile.html" aria-label="Open profile" class="ml-1 grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">JD</a>
+      </div>
+    </header>
+
+    <main class="flex-1 p-4 md:p-6">
+
+      <!-- Component: ContactsApp (no spec) — three panes: filters, list, detail.
+           Desktop: all three side by side. Mobile: filters become a select,
+           and choosing a contact swaps the list for the detail pane. -->
+      <section data-component="ContactsApp" class="flex min-h-[640px] overflow-hidden rounded-card border border-line bg-surface shadow-card">
+
+        <!-- Pane 1: filters -->
+        <nav aria-label="Contact filters" class="hidden w-56 shrink-0 border-r border-line p-4 lg:block">
+          <!-- Component: Button · element/design-button.md -->
+          <button type="button" data-open-add data-component="Button" class="mb-5 inline-flex h-10 w-full items-center justify-center gap-2 rounded-control bg-primary px-4 font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">
+            <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>Add contact
+          </button>
+          <ul id="filter-list" class="space-y-1"></ul>
+          <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">Departments</p>
+          <ul id="dept-list" class="space-y-1"></ul>
+        </nav>
+
+        <!-- Pane 2: list -->
+        <div id="list-pane" class="flex w-full flex-col border-r border-line md:w-80 md:shrink-0">
+          <div class="space-y-3 border-b border-line p-4">
+            <div class="flex gap-2 lg:hidden">
+              <!-- Component: Select · element/design-select.md -->
+              <label class="sr-only" for="filter-select">Filter contacts</label>
+              <select id="filter-select" data-component="Select" class="h-10 flex-1 rounded-control border border-line bg-surface px-3 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"></select>
+              <button type="button" data-open-add aria-label="Add contact" class="grid h-10 w-10 place-items-center rounded-control bg-primary text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary">
+                <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+            </div>
+            <!-- Component: SearchField · element/design-search-field.md -->
+            <label data-component="SearchField" class="relative block">
+              <span class="sr-only">Search contacts</span>
+              <svg aria-hidden="true" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+              <input id="contact-search" type="search" placeholder="Search contacts…" class="h-10 w-full rounded-control border border-line bg-surface pl-9 pr-3 placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            </label>
+          </div>
+          <ul id="contact-list" class="flex-1 overflow-y-auto" aria-label="Contacts"></ul>
+          <!-- Component: EmptyState · element/design-empty-state.md -->
+          <div id="contact-empty" hidden data-component="EmptyState" class="grid flex-1 place-items-center p-6 text-center">
+            <div><p class="font-medium">No contacts found</p><p class="mt-1 text-muted">Try another name or filter.</p></div>
+          </div>
+        </div>
+
+        <!-- Pane 3: detail -->
+        <div id="detail-pane" class="hidden min-w-0 flex-1 flex-col md:flex"></div>
+      </section>
+
+      <!-- Component: AddContactDialog (no spec) — native <dialog>, uses TextInput and Select specs -->
+      <dialog id="add-dialog" aria-labelledby="add-title" class="w-[min(92vw,460px)] rounded-card border border-line bg-surface p-0 text-ink shadow-card backdrop:bg-black/50">
+        <form id="add-form" method="dialog" class="p-6">
+          <h2 id="add-title" class="text-lg font-semibold">Add contact</h2>
+          <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label class="block font-medium sm:col-span-2">Full name
+              <input name="name" required class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            </label>
+            <label class="block font-medium">Role
+              <input name="role" required class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            </label>
+            <label class="block font-medium">Department
+              <select name="dept" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <option>Engineering</option><option>Sales</option><option>Support</option>
+              </select>
+            </label>
+            <label class="block font-medium sm:col-span-2">Email
+              <input name="email" type="email" required class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            </label>
+            <label class="block font-medium sm:col-span-2">Phone
+              <input name="phone" type="tel" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            </label>
+          </div>
+          <div class="mt-6 flex justify-end gap-3">
+            <button type="button" id="add-cancel" class="inline-flex h-10 items-center rounded-control px-4 font-medium text-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary">Cancel</button>
+            <button type="submit" class="inline-flex h-10 items-center rounded-control bg-primary px-4 font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">Save contact</button>
+          </div>
+        </form>
+      </dialog>
+    </main>
+  </div>
+</div>
+
+<script>
+  const tones = ['bg-primary-light text-primary', 'bg-secondary-light text-info-dark', 'bg-success-light text-success-dark', 'bg-warning-light text-warning-dark', 'bg-danger-light text-danger-dark', 'bg-info-light text-info-dark'];
+  const contacts = [
+    { id: 1, name: 'Maya Chen', role: 'Frontend Engineer', dept: 'Engineering', email: 'maya@example.test', phone: '+1 (555) 010-1001', location: 'Seattle, WA', starred: true, frequent: true, note: 'Owns the dashboard UI. Prefers Slack over email.' },
+    { id: 2, name: 'Leo Park', role: 'Account Executive', dept: 'Sales', email: 'leo@example.test', phone: '+1 (555) 010-1002', location: 'Austin, TX', starred: false, frequent: true, note: 'Handles enterprise renewals in the south region.' },
+    { id: 3, name: 'Ana Silva', role: 'Support Lead', dept: 'Support', email: 'ana@example.test', phone: '+1 (555) 010-1003', location: 'Miami, FL', starred: true, frequent: false, note: 'Escalation contact for refund cases.' },
+    { id: 4, name: 'Tom Reed', role: 'Backend Engineer', dept: 'Engineering', email: 'tom@example.test', phone: '+1 (555) 010-1004', location: 'Denver, CO', starred: false, frequent: false, note: 'Payments API and checkout service.' },
+    { id: 5, name: 'Jordan Lee', role: 'Sales Manager', dept: 'Sales', email: 'jordan@example.test', phone: '+1 (555) 010-1005', location: 'Boston, MA', starred: false, frequent: true, note: 'Weekly pipeline review on Mondays.' },
+    { id: 6, name: 'Priya Nair', role: 'Support Agent', dept: 'Support', email: 'priya@example.test', phone: '+1 (555) 010-1006', location: 'Chicago, IL', starred: false, frequent: false, note: 'Covers the APAC shift.' },
+    { id: 7, name: 'Sam Ortiz', role: 'DevOps Engineer', dept: 'Engineering', email: 'sam@example.test', phone: '+1 (555) 010-1007', location: 'Portland, OR', starred: true, frequent: false, note: 'On call for infrastructure this month.' },
+  ];
+  const filters = [
+    { key: 'all', label: 'All contacts', test: () => true },
+    { key: 'starred', label: 'Starred', test: (c) => c.starred },
+    { key: 'frequent', label: 'Frequently contacted', test: (c) => c.frequent },
+  ];
+  const depts = ['Engineering', 'Sales', 'Support'];
+  const state = { filter: 'all', query: '', selected: 1 };
+
+  const initials = (n) => n.split(' ').map((p) => p[0]).join('').slice(0, 2).toUpperCase();
+  const tone = (c) => tones[c.id % tones.length];
+  const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+
+  function matches(c) {
+    const f = filters.find((x) => x.key === state.filter);
+    const passFilter = f ? f.test(c) : c.dept === state.filter;
+    return passFilter && (c.name + ' ' + c.role + ' ' + c.email).toLowerCase().includes(state.query);
+  }
+
+  function renderFilters() {
+    const btn = (key, label, count) => `
+      <li><button type="button" data-filter="${key}" ${state.filter === key ? 'aria-current="true"' : ''}
+        class="flex h-10 w-full items-center justify-between rounded-control px-3 text-left ${state.filter === key ? 'bg-primary-light font-medium text-primary' : 'text-muted hover:bg-soft'}">
+        <span>${label}</span><span class="tabular text-xs">${count}</span></button></li>`;
+    document.getElementById('filter-list').innerHTML = filters.map((f) => btn(f.key, f.label, contacts.filter(f.test).length)).join('');
+    document.getElementById('dept-list').innerHTML = depts.map((d) => btn(d, d, contacts.filter((c) => c.dept === d).length)).join('');
+    document.getElementById('filter-select').innerHTML =
+      [...filters.map((f) => [f.key, f.label]), ...depts.map((d) => [d, d])]
+        .map(([k, l]) => `<option value="${k}" ${state.filter === k ? 'selected' : ''}>${l}</option>`).join('');
+  }
+
+  function renderList() {
+    const list = contacts.filter(matches);
+    document.getElementById('contact-list').innerHTML = list.map((c) => `
+      <li><button type="button" data-select="${c.id}" ${state.selected === c.id ? 'aria-current="true"' : ''}
+        class="flex w-full items-center gap-3 border-b border-line px-4 py-3 text-left ${state.selected === c.id ? 'bg-primary-light' : 'hover:bg-soft'}">
+        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full text-xs font-semibold ${tone(c)}" aria-hidden="true">${initials(c.name)}</span>
+        <span class="min-w-0 flex-1"><span class="block truncate font-medium">${esc(c.name)}</span><span class="block truncate text-xs text-muted">${esc(c.role)}</span></span>
+        ${c.starred ? '<span class="text-warning" aria-label="Starred">★</span>' : ''}
+      </button></li>`).join('');
+    document.getElementById('contact-empty').hidden = list.length > 0;
+  }
+
+  function renderDetail() {
+    const pane = document.getElementById('detail-pane');
+    const c = contacts.find((x) => x.id === state.selected);
+    if (!c) {
+      pane.innerHTML = `<div class="grid flex-1 place-items-center p-6 text-center text-muted">Select a contact to see details.</div>`;
+      return;
+    }
+    pane.innerHTML = `
+      <div class="flex items-center gap-2 border-b border-line p-4">
+        <button type="button" data-back class="inline-flex h-9 items-center gap-1 rounded-control px-2 text-primary hover:bg-primary-light md:hidden">‹ Back</button>
+        <div class="ml-auto flex gap-1">
+          <button type="button" data-star aria-pressed="${c.starred}" aria-label="${c.starred ? 'Remove star' : 'Star contact'}"
+            class="grid h-10 w-10 place-items-center rounded-control hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary ${c.starred ? 'text-warning' : 'text-muted'}">
+            <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="${c.starred ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4 6.5 20.3l1-6.2L3 9.7l6.2-.9z"/></svg>
+          </button>
+          <button type="button" data-delete aria-label="Delete contact"
+            class="grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-danger-light hover:text-danger-dark focus:outline-none focus:ring-2 focus:ring-danger">
+            <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="overflow-y-auto p-6">
+        <div class="flex items-center gap-4">
+          <span class="grid h-16 w-16 shrink-0 place-items-center rounded-full text-lg font-semibold ${tone(c)}" aria-hidden="true">${initials(c.name)}</span>
+          <div class="min-w-0">
+            <h2 class="truncate text-xl font-semibold">${esc(c.name)}</h2>
+            <p class="text-muted">${esc(c.role)}</p>
+            <span class="mt-1 inline-flex rounded-full bg-soft px-2.5 py-1 text-xs font-medium text-muted">${esc(c.dept)}</span>
+          </div>
+        </div>
+        <dl class="mt-8 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
+          <div><dt class="text-xs text-muted">Email</dt><dd class="mt-1 break-all"><a class="text-primary hover:underline" href="mailto:${esc(c.email)}">${esc(c.email)}</a></dd></div>
+          <div><dt class="text-xs text-muted">Phone</dt><dd class="mt-1">${esc(c.phone || '—')}</dd></div>
+          <div><dt class="text-xs text-muted">Location</dt><dd class="mt-1">${esc(c.location || '—')}</dd></div>
+          <div><dt class="text-xs text-muted">Department</dt><dd class="mt-1">${esc(c.dept)}</dd></div>
+          <div class="sm:col-span-2"><dt class="text-xs text-muted">Notes</dt><dd class="mt-1 text-muted">${esc(c.note || 'No notes yet.')}</dd></div>
+        </dl>
+      </div>`;
+  }
+
+  // Mobile: show list OR detail; desktop (md+) shows both.
+  function showDetailOnMobile(on) {
+    document.getElementById('list-pane').classList.toggle('hidden', on);
+    document.getElementById('list-pane').classList.toggle('md:flex', on);
+    document.getElementById('detail-pane').classList.toggle('hidden', !on);
+    document.getElementById('detail-pane').classList.toggle('flex', on);
+  }
+
+  function render() { renderFilters(); renderList(); renderDetail(); }
+
+  document.addEventListener('click', (e) => {
+    const f = e.target.closest('[data-filter]');
+    if (f) { state.filter = f.dataset.filter; render(); return; }
+    const s = e.target.closest('[data-select]');
+    if (s) { state.selected = Number(s.dataset.select); render(); showDetailOnMobile(true); return; }
+    if (e.target.closest('[data-back]')) { showDetailOnMobile(false); return; }
+    if (e.target.closest('[data-star]')) {
+      const c = contacts.find((x) => x.id === state.selected);
+      c.starred = !c.starred; render(); return;
+    }
+    if (e.target.closest('[data-delete]')) {
+      const c = contacts.find((x) => x.id === state.selected);
+      if (!confirm(`Delete ${c.name}?`)) return;
+      contacts.splice(contacts.indexOf(c), 1);
+      state.selected = (contacts.find(matches) || {}).id;
+      render(); showDetailOnMobile(false); return;
+    }
+    if (e.target.closest('[data-open-add]')) { document.getElementById('add-dialog').showModal(); }
+  });
+  document.getElementById('filter-select').addEventListener('change', (e) => { state.filter = e.target.value; render(); });
+  document.getElementById('contact-search').addEventListener('input', (e) => { state.query = e.target.value.trim().toLowerCase(); renderList(); });
+
+  const dialog = document.getElementById('add-dialog');
+  document.getElementById('add-cancel').addEventListener('click', () => dialog.close());
+  document.getElementById('add-form').addEventListener('submit', (e) => {
+    const data = Object.fromEntries(new FormData(e.target));
+    const id = Math.max(0, ...contacts.map((c) => c.id)) + 1;
+    contacts.push({ id, ...data, location: '', starred: false, frequent: false, note: '' });
+    state.selected = id; state.filter = 'all'; state.query = '';
+    document.getElementById('contact-search').value = '';
+    e.target.reset();
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>

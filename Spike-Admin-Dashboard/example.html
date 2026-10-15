@@ -1,59 +1,27 @@
 <!doctype html>
 <!--
-  Spike Admin Dashboard — reference example
+  Spike Admin Dashboard — Dashboard (example page)
 
-  Purpose: a single, self-contained page that shows every component in
-  design.md / element/*.md assembled into the dashboard, so a person or an AI
-  can see the design and copy markup from it.
+  Dashboard overview: KPI cards, charts, tables, reviews, plus a gallery of primitives and states.
 
-  How to read this file:
-  - Every component is wrapped in a comment `Component: <Name> · element/<file>.md`
-    and carries `data-component="<Name>"`, so it maps 1:1 to its spec.
-  - Colors come from the tokens in design.md, registered in tailwind.config below
-    (primary, secondary, page, surface, ink, muted, line, success, warning,
-    danger, info, soft). The `*-light` / `*-dark` tints are proposed additions
-    for badge backgrounds and readable text — they are not in design.md.
-  - All numbers, names and products are sample data from the reference page.
-  - Charts are hand-drawn inline SVG so the file needs no chart library.
-    In a real app, swap them for the chart library of your choice.
-  - The top part is the dashboard page; the "Component gallery" at the bottom
-    shows primitives and states (variants, loading, empty, error) one by one.
-
-  Styling: Tailwind CSS via the Play CDN — needs internet to load styles.
+  Part of a set of example pages that share one shell. Read the conventions:
+  - shared.js holds the theme tokens (light from design.md, dark PROPOSED),
+    tailwind.config, the light/dark toggle, the mobile drawer and the cart.
+  - Use token class names only (bg-surface, text-muted, border-line, bg-primary…),
+    never stock Tailwind colors, so the page follows light/dark automatically.
+  - Components from element/*.md are marked `Component: <Name> · element/<file>.md`
+    and `data-component="<Name>"`. Pieces with no spec file are marked
+    `Component: <Name> (no spec)`.
+  - All names, products and numbers are sample data. No external images.
+  - Styling: Tailwind CSS via the Play CDN — needs internet to load styles.
 -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Spike Admin Dashboard — Example</title>
+  <title>Spike Admin — Dashboard</title>
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary:   { DEFAULT: '#5D87FF', light: '#ECF2FF', dark: '#4570EA' },
-            secondary: { DEFAULT: '#49BEFF', light: '#E8F7FF' },
-            page:    '#F6F8FC',
-            surface: '#FFFFFF',
-            ink:     '#202938',
-            muted:   '#6B7280',
-            line:    '#E6EAF0',
-            soft:    '#F2F6FA',
-            success: { DEFAULT: '#13DEB9', light: '#E6FFFA', dark: '#0A8F78' },
-            warning: { DEFAULT: '#FFAE1F', light: '#FEF5E5', dark: '#B87500' },
-            danger:  { DEFAULT: '#FA896B', light: '#FDEDE8', dark: '#C9573A' },
-            info:    { DEFAULT: '#539BFF', light: '#EBF3FE', dark: '#2F6FD6' },
-          },
-          borderRadius: { card: '12px', control: '8px' },
-          boxShadow: { card: '0 2px 10px rgb(20 35 60 / 4%)' },
-        },
-      },
-    };
-  </script>
-  <style>
-    .tabular { font-variant-numeric: tabular-nums; }
-  </style>
+  <script src="shared.js"></script>
 </head>
 <body class="bg-page font-sans text-sm text-ink antialiased">
 
@@ -68,46 +36,43 @@
     </div>
     <nav aria-label="Main navigation" class="flex-1 overflow-y-auto px-4 pb-6">
       <p class="px-3 pb-2 pt-4 text-xs font-semibold uppercase tracking-wide text-muted">Home</p>
-      <a href="#" aria-current="page" class="flex h-11 items-center gap-3 rounded-control bg-primary px-3 font-medium text-white">
+      <a href="example.html" aria-current="page" class="flex h-11 items-center gap-3 rounded-control bg-primary px-3 font-medium text-white">
         <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>
         Dashboard
       </a>
-      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
-        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
-        Analytics
-      </a>
-      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">eCommerce</p>
+      <a href="ecommerce-shop.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
         <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-2 9H8L6 3H3M9 20a1 1 0 100-2 1 1 0 000 2zm9 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
-        eCommerce
+        Shop
+      </a>
+      <a href="ecommerce-detail.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12l-8 8-9-9V3h8l9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+        Product Detail
+      </a>
+      <a href="ecommerce-checkout.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
+        Checkout
       </a>
       <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">Apps</p>
-      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
-        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-        Calendar
-      </a>
-      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
-        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg>
-        Chats
-        <span class="ml-auto rounded-full bg-secondary-light px-2 py-0.5 text-xs font-medium text-info-dark">3</span>
-      </a>
-      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
-        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-        Email
-      </a>
-      <a href="#" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+      <a href="contacts.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
         <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0114 0M17 11a3 3 0 100-6M22 21a6 6 0 00-4-5.6"/></svg>
         Contacts
       </a>
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">Pages</p>
+      <a href="profile.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>
+        User Profile
+      </a>
     </nav>
-    <div class="m-4 flex items-center gap-3 rounded-card bg-soft p-3">
+    <a href="profile.html" class="m-4 flex items-center gap-3 rounded-card bg-soft p-3 hover:bg-primary-light">
       <span class="grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-white">JD</span>
-      <div class="min-w-0">
-        <p class="truncate font-medium">Jonathan Deo</p>
-        <p class="truncate text-xs text-muted">Admin</p>
-      </div>
-    </div>
+      <span class="min-w-0">
+        <span class="block truncate font-medium">Jonathan Deo</span>
+        <span class="block truncate text-xs text-muted">Admin</span>
+      </span>
+    </a>
   </aside>
-  <div id="sidebar-backdrop" class="fixed inset-0 z-30 hidden bg-ink/40 lg:hidden"></div>
+  <div id="sidebar-backdrop" class="fixed inset-0 z-30 hidden bg-black/50 lg:hidden"></div>
 
   <div class="flex min-w-0 flex-1 flex-col">
 
@@ -115,19 +80,30 @@
     <header data-component="AppTopbar" class="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-surface px-4 md:px-6">
       <div class="flex items-center gap-3">
         <!-- Component: IconButton · element/design-icon-button.md -->
-        <button id="sidebar-toggle" type="button" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false" data-component="IconButton"
+        <button type="button" data-drawer-toggle aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false" data-component="IconButton"
                 class="grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary lg:hidden">
           <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
         <h1 class="text-lg font-semibold">Dashboard</h1>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1 sm:gap-2">
+        <!-- Component: ThemeToggle (no spec) — flips light/dark, see shared.js -->
+        <button type="button" data-theme-toggle aria-label="Switch theme"
+                class="grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+          <svg aria-hidden="true" class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 13a9 9 0 11-10-10 7 7 0 0010 10z"/></svg>
+          <svg aria-hidden="true" class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <a href="ecommerce-checkout.html" data-cart-link aria-label="Cart"
+           class="relative grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-2 9H8L6 3H3M9 20a1 1 0 100-2 1 1 0 000 2zm9 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
+          <span data-cart-count class="absolute -right-0.5 -top-0.5 hidden min-w-[18px] rounded-full bg-primary px-1 text-center text-[11px] font-semibold leading-[18px] text-white"></span>
+        </a>
         <button type="button" aria-label="Open notifications (2 unread)" data-component="IconButton"
-                class="relative grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+                class="relative hidden h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary sm:grid">
           <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
           <span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"></span>
         </button>
-        <button type="button" aria-label="Open profile menu" class="grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">JD</button>
+        <a href="profile.html" aria-label="Open profile" class="ml-1 grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">JD</a>
       </div>
     </header>
 
@@ -144,10 +120,10 @@
           </div>
           <!-- Decorative illustration placeholder: replace with an original or licensed asset -->
           <svg aria-hidden="true" class="absolute -bottom-4 right-2 hidden h-40 w-40 sm:block" viewBox="0 0 160 160">
-            <circle cx="95" cy="80" r="62" fill="#49BEFF" opacity=".18"/>
-            <rect x="50" y="78" width="18" height="50" rx="4" fill="#5D87FF" opacity=".55"/>
-            <rect x="76" y="58" width="18" height="70" rx="4" fill="#5D87FF" opacity=".75"/>
-            <rect x="102" y="38" width="18" height="90" rx="4" fill="#5D87FF"/>
+            <circle cx="95" cy="80" r="62" class="fill-secondary" opacity=".18"/>
+            <rect x="50" y="78" width="18" height="50" rx="4" class="fill-primary" opacity=".55"/>
+            <rect x="76" y="58" width="18" height="70" rx="4" class="fill-primary" opacity=".75"/>
+            <rect x="102" y="38" width="18" height="90" rx="4" class="fill-primary"/>
           </svg>
         </section>
 
@@ -231,7 +207,7 @@
           </div>
           <!-- Optional sparkline -->
           <svg aria-hidden="true" class="mt-4 h-12 w-full" viewBox="0 0 200 48" preserveAspectRatio="none">
-            <polyline fill="none" stroke="#49BEFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="0,38 28,32 56,36 84,22 112,26 140,14 168,18 200,6"/>
+            <polyline fill="none" class="stroke-secondary" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="0,38 28,32 56,36 84,22 112,26 140,14 168,18 200,6"/>
           </svg>
         </article>
 
@@ -248,7 +224,7 @@
             </span>
           </div>
           <svg aria-hidden="true" class="mt-4 h-12 w-full" viewBox="0 0 200 48" preserveAspectRatio="none">
-            <polyline fill="none" stroke="#5D87FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="0,34 28,30 56,20 84,28 112,16 140,22 168,10 200,12"/>
+            <polyline fill="none" class="stroke-primary" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="0,34 28,30 56,20 84,28 112,16 140,22 168,10 200,12"/>
           </svg>
         </article>
 
@@ -327,9 +303,9 @@
             <!-- Component: Button (ghost) · element/design-button.md -->
             <button type="button" data-component="Button" class="inline-flex h-9 items-center rounded-control px-3 font-medium text-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary">View all</button>
           </header>
-          <div class="overflow-x-auto">
+          <div class="relative overflow-x-auto">
             <table class="min-w-full text-left">
-              <thead class="bg-[#F8FAFC] text-xs uppercase tracking-wide text-muted">
+              <thead class="bg-thead text-xs uppercase tracking-wide text-muted">
                 <tr><th scope="col" class="px-5 py-3 font-semibold md:px-6">Products</th><th scope="col" class="px-5 py-3 font-semibold">Payment</th><th scope="col" class="px-5 py-3 font-semibold md:px-6">Status</th></tr>
               </thead>
               <tbody>
@@ -433,9 +409,9 @@
               <input id="review-search" type="search" placeholder="Search reviews…" class="h-10 w-full rounded-control border border-line bg-surface pl-9 pr-3 placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
             </label>
           </header>
-          <div class="overflow-x-auto">
+          <div class="relative overflow-x-auto">
             <table class="min-w-full text-left">
-              <thead class="bg-[#F8FAFC] text-xs uppercase tracking-wide text-muted">
+              <thead class="bg-thead text-xs uppercase tracking-wide text-muted">
                 <tr>
                   <th scope="col" class="px-5 py-3 font-semibold md:px-6">Products</th>
                   <th scope="col" class="px-5 py-3 font-semibold">Customer</th>
@@ -659,8 +635,8 @@
               <span class="text-xs text-muted">This week</span>
             </div>
             <svg class="mt-4 h-32 w-full" viewBox="0 0 300 120" preserveAspectRatio="none" role="img" aria-label="Example chart: values rise from 30 to 90 over the week">
-              <g stroke="#E6EAF0" stroke-width="1"><line x1="0" y1="30" x2="300" y2="30"/><line x1="0" y1="60" x2="300" y2="60"/><line x1="0" y1="90" x2="300" y2="90"/></g>
-              <polyline fill="none" stroke="#5D87FF" stroke-width="2.5" stroke-linejoin="round" points="0,90 50,80 100,84 150,60 200,52 250,40 300,30"/>
+              <g class="stroke-line" stroke-width="1"><line x1="0" y1="30" x2="300" y2="30"/><line x1="0" y1="60" x2="300" y2="60"/><line x1="0" y1="90" x2="300" y2="90"/></g>
+              <polyline fill="none" class="stroke-primary" stroke-width="2.5" stroke-linejoin="round" points="0,90 50,80 100,84 150,60 200,52 250,40 300,30"/>
             </svg>
           </section>
 
@@ -721,10 +697,10 @@
 
           <!-- Component: DataTable · element/design-table.md -->
           <div data-component="DataTable" class="overflow-hidden rounded-card border border-line bg-surface shadow-card md:col-span-2 xl:col-span-3">
-            <div class="overflow-x-auto">
+            <div class="relative overflow-x-auto">
               <table class="min-w-full text-left">
                 <caption class="px-5 py-4 text-left font-semibold">DataTable</caption>
-                <thead class="bg-[#F8FAFC] text-xs uppercase tracking-wide text-muted">
+                <thead class="bg-thead text-xs uppercase tracking-wide text-muted">
                   <tr><th scope="col" class="px-5 py-3 font-semibold">Name</th><th scope="col" class="px-5 py-3 font-semibold">Category</th><th scope="col" class="px-5 py-3 text-right font-semibold">Price</th><th scope="col" class="px-5 py-3 font-semibold">Status</th></tr>
                 </thead>
                 <tbody>
@@ -779,14 +755,14 @@
     svg.replaceChildren();
     [0, 25, 50, 75, 100].forEach((t) => {
       const y = bottom - (t / max) * (bottom - top);
-      svg.append(el('line', { x1: 0, x2: W, y1: y, y2: y, stroke: '#E6EAF0', 'stroke-width': 1 }));
+      svg.append(el('line', { x1: 0, x2: W, y1: y, y2: y, class: 'stroke-line', 'stroke-width': 1 }));
     });
     const slot = W / values.length, barW = 26;
     values.forEach((v, i) => {
       const h = (v / max) * (bottom - top);
       const x = i * slot + (slot - barW) / 2;
-      svg.append(el('rect', { x, y: bottom - h, width: barW, height: h, rx: 6, fill: i === values.indexOf(Math.max(...values)) ? '#5D87FF' : '#ECF2FF' }));
-      const label = el('text', { x: x + barW / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': 12, fill: '#6B7280' });
+      svg.append(el('rect', { x, y: bottom - h, width: barW, height: h, rx: 6, class: i === values.indexOf(Math.max(...values)) ? 'fill-primary' : 'fill-primary-light' }));
+      const label = el('text', { x: x + barW / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': 12, class: 'fill-muted' });
       label.textContent = labels[i];
       svg.append(label);
     });
@@ -803,13 +779,13 @@
     const W = 560, bottom = 210, top = 10, max = 1000;
     const x = (i) => (i / (labels.length - 1)) * (W - 20) + 10;
     const y = (v) => bottom - (v / max) * (bottom - top);
-    [0, 250, 500, 750, 1000].forEach((t) => svg.append(el('line', { x1: 0, x2: W, y1: y(t), y2: y(t), stroke: '#E6EAF0', 'stroke-width': 1 })));
+    [0, 250, 500, 750, 1000].forEach((t) => svg.append(el('line', { x1: 0, x2: W, y1: y(t), y2: y(t), class: 'stroke-line', 'stroke-width': 1 })));
     const pts = (arr) => arr.map((v, i) => `${x(i)},${y(v)}`).join(' ');
-    svg.append(el('polygon', { points: `${x(0)},${bottom} ${pts(thisWeek)} ${x(thisWeek.length - 1)},${bottom}`, fill: '#5D87FF', opacity: 0.08 }));
-    svg.append(el('polyline', { points: pts(lastWeek), fill: 'none', stroke: '#49BEFF', 'stroke-width': 2, 'stroke-dasharray': '6 5' }));
-    svg.append(el('polyline', { points: pts(thisWeek), fill: 'none', stroke: '#5D87FF', 'stroke-width': 3, 'stroke-linejoin': 'round' }));
+    svg.append(el('polygon', { points: `${x(0)},${bottom} ${pts(thisWeek)} ${x(thisWeek.length - 1)},${bottom}`, class: 'fill-primary', opacity: 0.08 }));
+    svg.append(el('polyline', { points: pts(lastWeek), fill: 'none', class: 'stroke-secondary', 'stroke-width': 2, 'stroke-dasharray': '6 5' }));
+    svg.append(el('polyline', { points: pts(thisWeek), fill: 'none', class: 'stroke-primary', 'stroke-width': 3, 'stroke-linejoin': 'round' }));
     labels.forEach((l, i) => {
-      const t = el('text', { x: x(i), y: 234, 'text-anchor': i === 0 ? 'start' : i === labels.length - 1 ? 'end' : 'middle', 'font-size': 12, fill: '#6B7280' });
+      const t = el('text', { x: x(i), y: 234, 'text-anchor': i === 0 ? 'start' : i === labels.length - 1 ? 'end' : 'middle', 'font-size': 12, class: 'fill-muted' });
       t.textContent = l;
       svg.append(t);
     });
@@ -838,18 +814,6 @@
     document.getElementById('welcome-notice').remove();
   });
 
-  // AppSidebar mobile drawer.
-  const sidebar = document.getElementById('sidebar');
-  const backdrop = document.getElementById('sidebar-backdrop');
-  const toggle = document.getElementById('sidebar-toggle');
-  const setDrawer = (open) => {
-    sidebar.classList.toggle('-translate-x-full', !open);
-    backdrop.classList.toggle('hidden', !open);
-    toggle.setAttribute('aria-expanded', String(open));
-  };
-  toggle.addEventListener('click', () => setDrawer(sidebar.classList.contains('-translate-x-full')));
-  backdrop.addEventListener('click', () => setDrawer(false));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setDrawer(false); });
 </script>
 </body>
 </html>

@@ -18,10 +18,28 @@ tables and review widgets beside a collapsible sidebar.
   tokens, plus shared implementation rules.
 - [`element/`](element/) — one spec per component, each with anatomy, visual
   specs, states and an HTML/Tailwind blueprint.
-- [`example.html`](example.html) — the whole dashboard built from those specs
-  in one plain HTML file (Tailwind via CDN), plus a gallery of primitives and
-  states. Open it in a browser. Each component is marked with
-  `data-component="<Name>"` and a comment naming its spec file.
+- Example pages — plain HTML (Tailwind via CDN) built from those specs. Open
+  any of them in a browser; the sidebar links them together and the top bar
+  has a light/dark toggle. Each component is marked with
+  `data-component="<Name>"` and a comment naming its spec file (or `no spec`).
+
+  | Page | What it shows |
+  |---|---|
+  | [`example.html`](example.html) | Dashboard overview + a gallery of primitives and states |
+  | [`profile.html`](profile.html) | User profile: cover, stats, tabs (Profile / Followers / Gallery), posts |
+  | [`contacts.html`](contacts.html) | Contacts app: filters, searchable list, detail pane, add-contact dialog |
+  | [`ecommerce-shop.html`](ecommerce-shop.html) | Product grid with category / price / rating filters, sort, search |
+  | [`ecommerce-detail.html`](ecommerce-detail.html) | Product detail (`?id=1`–`8`): gallery, colors, quantity, add to cart, reviews |
+  | [`ecommerce-checkout.html`](ecommerce-checkout.html) | 3-step checkout (Cart, Billing, Payment) with order summary |
+
+- [`shared.js`](shared.js) — loaded by every page: color tokens as CSS
+  variables, `tailwind.config`, light/dark theme, mobile drawer, cart.
+- [`ecommerce.js`](ecommerce.js) — sample product catalog for the three
+  eCommerce pages.
+
+> The dark theme and the profile, contacts and eCommerce pages are **not** in
+> the extracted spec. They are proposed in the same style; their components
+> have no file in `element/`.
 
 ### Components
 

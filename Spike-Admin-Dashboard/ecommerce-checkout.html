@@ -1,0 +1,373 @@
+<!doctype html>
+<!--
+  Spike Admin Dashboard — Checkout (example page)
+
+  eCommerce checkout: 3-step flow (Cart, Billing, Payment), order summary, success state.
+
+  Part of a set of example pages that share one shell. Read the conventions:
+  - shared.js holds the theme tokens (light from design.md, dark PROPOSED),
+    tailwind.config, the light/dark toggle, the mobile drawer and the cart.
+  - Use token class names only (bg-surface, text-muted, border-line, bg-primary…),
+    never stock Tailwind colors, so the page follows light/dark automatically.
+  - Components from element/*.md are marked `Component: <Name> · element/<file>.md`
+    and `data-component="<Name>"`. Pieces with no spec file are marked
+    `Component: <Name> (no spec)`.
+  - All names, products and numbers are sample data. No external images.
+  - Styling: Tailwind CSS via the Play CDN — needs internet to load styles.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spike Admin — Checkout</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script src="shared.js"></script>
+  <script src="ecommerce.js"></script>
+</head>
+<body class="bg-page font-sans text-sm text-ink antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- Component: AppSidebar · element/design-sidebar.md -->
+  <aside id="sidebar" data-component="AppSidebar"
+         class="fixed inset-y-0 left-0 z-40 flex w-[260px] -translate-x-full flex-col border-r border-line bg-surface transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0">
+    <div class="flex h-16 items-center gap-2 px-6">
+      <span class="grid h-8 w-8 place-items-center rounded-control bg-primary text-sm font-bold text-white">S</span>
+      <span class="text-lg font-semibold">Spike</span>
+    </div>
+    <nav aria-label="Main navigation" class="flex-1 overflow-y-auto px-4 pb-6">
+      <p class="px-3 pb-2 pt-4 text-xs font-semibold uppercase tracking-wide text-muted">Home</p>
+      <a href="example.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>
+        Dashboard
+      </a>
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">eCommerce</p>
+      <a href="ecommerce-shop.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-2 9H8L6 3H3M9 20a1 1 0 100-2 1 1 0 000 2zm9 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
+        Shop
+      </a>
+      <a href="ecommerce-detail.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12l-8 8-9-9V3h8l9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+        Product Detail
+      </a>
+      <a href="ecommerce-checkout.html" aria-current="page" class="flex h-11 items-center gap-3 rounded-control bg-primary px-3 font-medium text-white">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
+        Checkout
+      </a>
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">Apps</p>
+      <a href="contacts.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0114 0M17 11a3 3 0 100-6M22 21a6 6 0 00-4-5.6"/></svg>
+        Contacts
+      </a>
+      <p class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wide text-muted">Pages</p>
+      <a href="profile.html" class="flex h-11 items-center gap-3 rounded-control px-3 text-muted hover:bg-primary-light hover:text-primary">
+        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>
+        User Profile
+      </a>
+    </nav>
+    <a href="profile.html" class="m-4 flex items-center gap-3 rounded-card bg-soft p-3 hover:bg-primary-light">
+      <span class="grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-white">JD</span>
+      <span class="min-w-0">
+        <span class="block truncate font-medium">Jonathan Deo</span>
+        <span class="block truncate text-xs text-muted">Admin</span>
+      </span>
+    </a>
+  </aside>
+  <div id="sidebar-backdrop" class="fixed inset-0 z-30 hidden bg-black/50 lg:hidden"></div>
+
+  <div class="flex min-w-0 flex-1 flex-col">
+
+    <!-- Component: AppTopbar · element/design-topbar.md -->
+    <header data-component="AppTopbar" class="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-surface px-4 md:px-6">
+      <div class="flex items-center gap-3">
+        <!-- Component: IconButton · element/design-icon-button.md -->
+        <button type="button" data-drawer-toggle aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false" data-component="IconButton"
+                class="grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary lg:hidden">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <h1 class="text-lg font-semibold">Checkout</h1>
+      </div>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <!-- Component: ThemeToggle (no spec) — flips light/dark, see shared.js -->
+        <button type="button" data-theme-toggle aria-label="Switch theme"
+                class="grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+          <svg aria-hidden="true" class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 13a9 9 0 11-10-10 7 7 0 0010 10z"/></svg>
+          <svg aria-hidden="true" class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <a href="ecommerce-checkout.html" data-cart-link aria-label="Cart"
+           class="relative grid h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-2 9H8L6 3H3M9 20a1 1 0 100-2 1 1 0 000 2zm9 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
+          <span data-cart-count class="absolute -right-0.5 -top-0.5 hidden min-w-[18px] rounded-full bg-primary px-1 text-center text-[11px] font-semibold leading-[18px] text-white"></span>
+        </a>
+        <button type="button" aria-label="Open notifications (2 unread)" data-component="IconButton"
+                class="relative hidden h-10 w-10 place-items-center rounded-control text-muted hover:bg-soft focus:outline-none focus:ring-2 focus:ring-primary sm:grid">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+          <span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"></span>
+        </button>
+        <a href="profile.html" aria-label="Open profile" class="ml-1 grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface">JD</a>
+      </div>
+    </header>
+
+    <main class="flex-1 p-4 md:p-6">
+
+      <!-- Component: CheckoutStepper (no spec) — 1 Cart, 2 Billing, 3 Payment -->
+      <nav aria-label="Checkout steps" data-component="CheckoutStepper" class="rounded-card border border-line bg-surface p-4 shadow-card md:p-5">
+        <ol id="stepper" class="flex items-center gap-2 md:gap-4"></ol>
+      </nav>
+
+      <div id="checkout-body" class="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-12 xl:gap-6">
+        <div class="xl:col-span-8">
+
+          <!-- Step 1: Cart -->
+          <section id="step-cart" aria-labelledby="cart-title" class="rounded-card border border-line bg-surface shadow-card">
+            <header class="flex items-center justify-between p-5 md:px-6">
+              <h2 id="cart-title" class="text-base font-semibold">Shopping cart</h2>
+              <a href="ecommerce-shop.html" class="font-medium text-primary hover:underline">Continue shopping</a>
+            </header>
+            <!-- Built from DataTable · element/design-table.md -->
+            <div class="relative overflow-x-auto">
+              <table data-component="DataTable" class="min-w-full text-left">
+                <thead class="bg-thead text-xs uppercase tracking-wide text-muted">
+                  <tr>
+                    <th scope="col" class="px-5 py-3 font-semibold md:px-6">Product</th>
+                    <th scope="col" class="px-5 py-3 font-semibold">Quantity</th>
+                    <th scope="col" class="px-5 py-3 text-right font-semibold">Total</th>
+                    <th scope="col" class="px-5 py-3 md:pr-6"><span class="sr-only">Remove</span></th>
+                  </tr>
+                </thead>
+                <tbody id="cart-rows"></tbody>
+              </table>
+            </div>
+            <!-- Component: EmptyState · element/design-empty-state.md -->
+            <div id="cart-empty" hidden data-component="EmptyState" class="grid min-h-48 place-items-center p-6 text-center">
+              <div>
+                <p class="text-base font-medium">Your cart is empty</p>
+                <p class="mt-1 text-muted">Add a product to start checkout.</p>
+                <a href="ecommerce-shop.html" class="mt-4 inline-flex h-10 items-center rounded-control bg-primary px-4 font-medium text-white hover:bg-primary-dark">Go to shop</a>
+              </div>
+            </div>
+          </section>
+
+          <!-- Step 2: Billing -->
+          <form id="step-billing" hidden aria-labelledby="billing-title" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6">
+            <h2 id="billing-title" class="text-base font-semibold">Billing address</h2>
+            <!-- Uses TextInput · element/design-input.md and Select · element/design-select.md -->
+            <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <label class="block font-medium">First name
+                <input name="first" required autocomplete="given-name" value="Jonathan" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </label>
+              <label class="block font-medium">Last name
+                <input name="last" required autocomplete="family-name" value="Deo" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </label>
+              <label class="block font-medium sm:col-span-2">Street address
+                <input name="street" required autocomplete="street-address" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </label>
+              <label class="block font-medium">City
+                <input name="city" required autocomplete="address-level2" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </label>
+              <label class="block font-medium">State
+                <select name="state" autocomplete="address-level1" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">
+                  <option>California</option><option>New York</option><option>Texas</option><option>Florida</option>
+                </select>
+              </label>
+              <label class="block font-medium">ZIP code
+                <input name="zip" required inputmode="numeric" pattern="[0-9]{5}" autocomplete="postal-code" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal invalid:[&:not(:placeholder-shown)]:border-danger focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="94103" />
+              </label>
+              <label class="block font-medium">Phone
+                <input name="phone" type="tel" autocomplete="tel" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </label>
+            </div>
+            <fieldset class="mt-6">
+              <legend class="mb-3 font-medium">Delivery</legend>
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <label class="flex cursor-pointer items-start gap-3 rounded-control border border-line p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-light">
+                  <input type="radio" name="delivery" value="0" checked class="mt-0.5 h-4 w-4 accent-[rgb(var(--c-primary))]" />
+                  <span><span class="block font-medium">Standard · Free</span><span class="text-xs text-muted">3–5 business days</span></span>
+                </label>
+                <label class="flex cursor-pointer items-start gap-3 rounded-control border border-line p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-light">
+                  <input type="radio" name="delivery" value="15" class="mt-0.5 h-4 w-4 accent-[rgb(var(--c-primary))]" />
+                  <span><span class="block font-medium">Express · $15</span><span class="text-xs text-muted">1–2 business days</span></span>
+                </label>
+              </div>
+            </fieldset>
+          </form>
+
+          <!-- Step 3: Payment -->
+          <form id="step-payment" hidden aria-labelledby="payment-title" class="rounded-card border border-line bg-surface p-5 shadow-card md:p-6">
+            <h2 id="payment-title" class="text-base font-semibold">Payment method</h2>
+            <fieldset class="mt-5">
+              <legend class="sr-only">Payment method</legend>
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <label class="flex cursor-pointer items-center gap-3 rounded-control border border-line p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-light">
+                  <input type="radio" name="method" value="card" checked class="h-4 w-4 accent-[rgb(var(--c-primary))]" />Credit card
+                </label>
+                <label class="flex cursor-pointer items-center gap-3 rounded-control border border-line p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-light">
+                  <input type="radio" name="method" value="paypal" class="h-4 w-4 accent-[rgb(var(--c-primary))]" />PayPal
+                </label>
+                <label class="flex cursor-pointer items-center gap-3 rounded-control border border-line p-4 has-[:checked]:border-primary has-[:checked]:bg-primary-light">
+                  <input type="radio" name="method" value="cod" class="h-4 w-4 accent-[rgb(var(--c-primary))]" />Cash on delivery
+                </label>
+              </div>
+            </fieldset>
+            <!-- Sample form only: never collect real card numbers in a demo page. -->
+            <div id="card-fields" class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <label class="block font-medium sm:col-span-2">Name on card
+                <input name="cardName" autocomplete="cc-name" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </label>
+              <label class="block font-medium sm:col-span-2">Card number
+                <input name="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </label>
+              <label class="block font-medium">Expiry
+                <input name="cardExp" autocomplete="cc-exp" placeholder="MM / YY" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </label>
+              <label class="block font-medium">CVC
+                <input name="cardCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" class="mt-1 block h-10 w-full rounded-control border border-line bg-surface px-3 font-normal placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </label>
+            </div>
+            <p id="method-note" hidden class="mt-5 rounded-control bg-info-light p-4 text-info-dark"></p>
+          </form>
+        </div>
+
+        <!-- Component: OrderSummary (no spec) -->
+        <aside data-component="OrderSummary" aria-labelledby="summary-title" class="h-fit rounded-card border border-line bg-surface p-5 shadow-card md:p-6 xl:sticky xl:top-20 xl:col-span-4">
+          <h2 id="summary-title" class="text-base font-semibold">Order summary</h2>
+          <dl class="mt-5 space-y-3">
+            <div class="flex justify-between"><dt class="text-muted">Subtotal</dt><dd id="sum-subtotal" class="tabular"></dd></div>
+            <div class="flex justify-between"><dt class="text-muted">Discount (5%)</dt><dd id="sum-discount" class="tabular text-success-dark"></dd></div>
+            <div class="flex justify-between"><dt class="text-muted">Shipping</dt><dd id="sum-shipping" class="tabular"></dd></div>
+            <div class="flex justify-between border-t border-line pt-3 text-base font-semibold"><dt>Total</dt><dd id="sum-total" class="tabular"></dd></div>
+          </dl>
+          <div class="mt-6 flex gap-3">
+            <button type="button" id="btn-back" class="inline-flex h-11 items-center justify-center rounded-control border border-primary px-4 font-medium text-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary">Back</button>
+            <!-- Component: Button · element/design-button.md -->
+            <button type="button" id="btn-next" data-component="Button" class="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-control bg-primary px-4 font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-50"></button>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Success state, shown after "Place order" -->
+      <section id="order-success" hidden class="mt-5 grid min-h-[360px] place-items-center rounded-card border border-line bg-surface p-8 text-center shadow-card">
+        <div>
+          <span class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-success-light text-success-dark" aria-hidden="true">
+            <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          </span>
+          <h2 class="mt-4 text-xl font-semibold" tabindex="-1" id="success-title">Thank you for your order!</h2>
+          <p class="mt-2 text-muted">Order <span id="order-id" class="tabular font-medium text-ink"></span> is confirmed. We’ll email you when it ships.</p>
+          <a href="ecommerce-shop.html" class="mt-6 inline-flex h-10 items-center rounded-control bg-primary px-4 font-medium text-white hover:bg-primary-dark">Back to shop</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+  const steps = [
+    { id: 'step-cart', label: 'Cart', next: 'Checkout' },
+    { id: 'step-billing', label: 'Billing', next: 'Continue to payment' },
+    { id: 'step-payment', label: 'Payment', next: 'Place order' },
+  ];
+  let step = 0;
+  const $ = (id) => document.getElementById(id);
+
+  function lines() {
+    return cart.get().map((i) => ({ ...i, product: findProduct(i.id) })).filter((l) => l.product);
+  }
+
+  function renderStepper() {
+    $('stepper').innerHTML = steps.map((s, i) => {
+      const done = i < step, current = i === step;
+      return `
+        <li class="flex flex-1 items-center gap-2 md:gap-3" ${current ? 'aria-current="step"' : ''}>
+          <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full text-sm font-semibold ${done ? 'bg-success text-white' : current ? 'bg-primary text-white' : 'bg-soft text-muted'}">
+            ${done ? '<svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg><span class="sr-only">Done:</span>' : i + 1}
+          </span>
+          <span class="hidden font-medium sm:inline ${current ? 'text-ink' : 'text-muted'}">${s.label}</span>
+          ${i < steps.length - 1 ? `<span class="h-px flex-1 ${done ? 'bg-success' : 'bg-line'}" aria-hidden="true"></span>` : ''}
+        </li>`;
+    }).join('');
+  }
+
+  function renderCart() {
+    const ls = lines();
+    $('cart-rows').innerHTML = ls.map((l, idx) => `
+      <tr class="border-t border-line">
+        <td class="px-5 py-4 md:px-6">
+          <!-- Uses ProductIdentityCell · element/design-product-identity-cell.md -->
+          <div class="flex min-w-56 items-center gap-3">
+            ${productImage(l.product, 'h-14 w-14 shrink-0 rounded-control')}
+            <div><a href="ecommerce-detail.html?id=${l.product.id}" class="font-medium hover:text-primary">${l.product.name}</a>
+              <p class="text-xs text-muted">${l.color || ''} · ${money(l.product.price)}</p></div>
+          </div>
+        </td>
+        <td class="px-5 py-4">
+          <div class="inline-flex h-9 items-center rounded-control border border-line">
+            <button type="button" data-qty="${idx}" data-delta="-1" aria-label="Decrease quantity of ${l.product.name}" class="grid h-full w-9 place-items-center text-muted hover:bg-soft disabled:opacity-40" ${l.qty <= 1 ? 'disabled' : ''}>−</button>
+            <span class="tabular w-10 text-center" aria-live="polite">${l.qty}</span>
+            <button type="button" data-qty="${idx}" data-delta="1" aria-label="Increase quantity of ${l.product.name}" class="grid h-full w-9 place-items-center text-muted hover:bg-soft">+</button>
+          </div>
+        </td>
+        <td class="tabular px-5 py-4 text-right font-medium">${money(l.product.price * l.qty)}</td>
+        <td class="px-5 py-4 text-right md:pr-6">
+          <button type="button" data-remove="${idx}" aria-label="Remove ${l.product.name}" class="grid h-9 w-9 place-items-center rounded-control text-muted hover:bg-danger-light hover:text-danger-dark">
+            <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
+          </button>
+        </td>
+      </tr>`).join('');
+    $('cart-empty').hidden = ls.length > 0;
+    $('cart-rows').closest('table').classList.toggle('hidden', ls.length === 0);
+  }
+
+  function renderSummary() {
+    const subtotal = lines().reduce((n, l) => n + l.product.price * l.qty, 0);
+    const discount = Math.round(subtotal * 0.05);
+    const shipping = step >= 1 ? Number(new FormData($('step-billing')).get('delivery')) : 0;
+    $('sum-subtotal').textContent = money(subtotal);
+    $('sum-discount').textContent = '−' + money(discount);
+    $('sum-shipping').textContent = step >= 1 ? (shipping ? money(shipping) : 'Free') : 'Calculated next';
+    $('sum-total').textContent = money(subtotal - discount + shipping);
+    $('btn-next').textContent = steps[step].next;
+    $('btn-next').disabled = subtotal === 0;
+    $('btn-back').classList.toggle('hidden', step === 0);
+  }
+
+  function render() {
+    steps.forEach((s, i) => { $(s.id).hidden = i !== step; });
+    renderStepper(); renderCart(); renderSummary();
+  }
+
+  $('cart-rows').addEventListener('click', (e) => {
+    const items = cart.get();
+    const q = e.target.closest('[data-qty]');
+    const r = e.target.closest('[data-remove]');
+    if (q) items[q.dataset.qty].qty = Math.max(1, items[q.dataset.qty].qty + Number(q.dataset.delta));
+    else if (r) items.splice(Number(r.dataset.remove), 1);
+    else return;
+    cart.set(items);
+    render();
+  });
+
+  $('step-billing').addEventListener('change', renderSummary);
+  $('step-payment').addEventListener('change', () => {
+    const m = new FormData($('step-payment')).get('method');
+    $('card-fields').hidden = m !== 'card';
+    $('method-note').hidden = m === 'card';
+    $('method-note').textContent = m === 'paypal' ? 'You will be sent to PayPal to finish paying.' : 'Pay the courier in cash when your order arrives.';
+  });
+
+  $('btn-back').addEventListener('click', () => { step = Math.max(0, step - 1); render(); });
+  $('btn-next').addEventListener('click', () => {
+    if (step === 1 && !$('step-billing').reportValidity()) return;
+    if (step < steps.length - 1) { step++; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    // Place order: demo only — clear cart and show success.
+    $('order-id').textContent = '#SP-' + Math.floor(100000 + Math.random() * 900000);
+    cart.set([]);
+    $('checkout-body').hidden = true;
+    $('stepper').closest('nav').hidden = true;
+    $('order-success').hidden = false;
+    $('success-title').focus();
+  });
+
+  render();
+</script>
+</body>
+</html>

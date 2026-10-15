@@ -12,12 +12,14 @@ Each design has its own folder:
 ├── README.md     # preview picture + short description
 ├── design.md     # design details: colors, typography, spacing, layout
 ├── element/      # one spec per component: design-<component>.md
-├── example.html  # working example of the whole design — open in a browser
+├── example.html  # working example of the design — open in a browser
+├── *.html        # optional extra example pages (profile, shop, ...)
+├── shared.js     # optional: theme + setup shared by the example pages
 └── assets/       # screenshots and images
 ```
 
-Open a design's `README.md` for a quick look, then `example.html` to see it working, and
-`design.md` and `element/` for the details.
+Open a design's `README.md` for a quick look, then `example.html` to see it
+working, and `design.md` and `element/` for the details.
 
 ## Designs
 
