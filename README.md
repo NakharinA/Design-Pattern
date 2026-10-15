@@ -27,3 +27,4 @@ it working, and `design.md` and `element/` for the details.
 | Design | Description | Source |
 |---|---|---|
 | [Spike Admin Dashboard](Spike-Admin-Dashboard/) | Light eCommerce admin dashboard — blue primary, KPI cards, charts, tables, sidebar layout | [spike-nuxtjs-pro](https://spike-nuxtjs-pro-main.netlify.app/dashboards/dashboard1) |
+| [Apex Vue Dashboard](Apex-Vue-Dashboard/) | Classic Bootstrap-style Vue admin — royal-blue primary, grey canvas, KPI cards, line/bar/donut charts, filterable orders table | [apex-vue](https://demo.dashboardpack.com/apex-vue/) |

@@ -23,6 +23,9 @@ Design-Pattern/
     ├── element/               # one spec per component: design-<component>.md
     ├── example/               # working example pages
     │   ├── index.html         # main page: the whole design in one working page
+    │   ├── customers.html     # default page: table-based list
+    │   ├── profile-edit.html  # default page: edit-profile form
+    │   ├── catalog.html       # default page: product catalog grid
     │   ├── <page>.html        # optional extra pages, same shell
     │   └── shared.js          # theme tokens + shell behaviour for the pages
     └── assets/                # screenshots and images used by the docs
@@ -59,6 +62,24 @@ needs them.
   page (dashboard/overview); extra pages (profile, contacts, shop, ...) and
   the shared `.js` files sit next to it. Rules (see
   `Spike-Admin-Dashboard/example/`):
+  - **Default pages** — every design ships these four, so designs can be
+    compared page for page (see `Apex-Vue-Dashboard/example/`):
+    - `index.html` — dashboard overview + component gallery (rules below).
+    - `customers.html` — table-based page: status tabs with counts, search,
+      filter select, sortable columns, row selection with bulk actions,
+      pagination, add/edit dialog with validation, delete confirm, loading
+      and empty states.
+    - `profile-edit.html` — edit-profile form: live preview card, tabs
+      (personal info / password & security / notifications), validation,
+      unsaved-changes bar with save/discard. Saving updates the signed-in
+      name in the top bar of every page.
+    - `catalog.html` — product catalog: filter panel (category, price,
+      rating, in stock), search, sort, grid/list toggle, removable filter
+      chips, pagination, add to cart, empty state.
+    Use the design's own components and tokens; content and layout can
+    follow the reference site where it has an equivalent page. Older designs
+    with a matching page under another name (Spike's `ecommerce-shop.html`
+    is its catalog) can keep it until they are next updated.
   - Plain HTML, no build. Each page loads, in `<head>`:
     `https://cdn.tailwindcss.com/3.4.16` (pinned) then `shared.js`. Page-specific
     markup and script stay inline in the page; shared sample data that several
@@ -97,8 +118,9 @@ needs them.
    extracted package, keep its `design.md` and `element/` as-is and rewrite its
    `README.md` to the template above (with a component table grouped by role —
    see `Spike-Admin-Dashboard/README.md`).
-2. Build `example/index.html` and `example/shared.js` from `design.md` and `element/`
-   following the rules above, and check it renders in a browser.
+2. Build `example/shared.js` and the default pages (`index.html`,
+   `customers.html`, `profile-edit.html`, `catalog.html`) from `design.md` and
+   `element/` following the rules above, and check them in a browser.
 3. Add a row for it in the table in the root `README.md`, linking to the folder.
 
 Keep the root `README.md` index in sync whenever a design folder is added,
